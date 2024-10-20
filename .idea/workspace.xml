@@ -5,29 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="62b5d0ce-a9e2-4413-84f5-34eb19f18306" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Appointment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Appointment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/ClinicManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/ClinicManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Doctor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Doctor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Imaging.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Imaging.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Location.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Location.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Patient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Patient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Person.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Person.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Profile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Provider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Provider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Radiology.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Radiology.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/RunProject2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/RunProject2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Specialty.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Specialty.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Technician.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Technician.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Timeslot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Timeslot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Visit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/Visit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/tests/DateTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/tests/DateTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/tests/ListTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/tests/ListTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/tests/ProfileTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/tests/ProfileTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/util/Date.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/util/Date.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/util/List.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/util/List.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/util/Sort.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/util/Sort.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/projects/ruclinic/enhancedgui/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/projects/ruclinic/enhancedgui/hello-view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
