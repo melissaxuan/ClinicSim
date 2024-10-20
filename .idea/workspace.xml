@@ -5,7 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="62b5d0ce-a9e2-4413-84f5-34eb19f18306" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ClinicManagerMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/HelloController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ClinicManagerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/ClinicManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/ClinicManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/RunProject2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ruclinic/RunProject2.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/projects/ruclinic/enhancedgui/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/projects/ruclinic/enhancedgui/hello-view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -34,15 +41,74 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.ClinicManagerMain.executor": "Run",
+    "Application.HelloApplication.executor": "Run",
+    "Maven.RUClinic3 [execjava].executor": "Run",
     "Maven.RUClinic3 [install].executor": "Run",
+    "Maven.RUClinic3 [javafx:run].executor": "Run",
+    "Maven.RUClinic3.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "enhanced-gui-branch",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/melis/Rutgers/2024 Fall Software Methodology/RUClinic3",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+    "last_opened_file_path": "C:/Users/melis/Rutgers/2024 Fall Software Methodology/RUClinic3/src/main/resources/projects/ruclinic/enhancedgui/hello-view.fxml",
+    "settings.editor.selected.configurable": "preferences.JavaFX"
   }
 }]]></component>
+  <component name="RunManager" selected="Application.ClinicManagerMain">
+    <configuration name="ClinicManagerMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="projects.ruclinic.enhancedgui.ClinicManagerMain" />
+      <module name="RUClinic3" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="projects.ruclinic.enhancedgui.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RUClinic3 [execjava]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="cmdOptions" />
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="execjava" />
+              </list>
+            </option>
+            <option name="multimoduleDir" />
+            <option name="pomFileName" value="pom.xml" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="projectsCmdOptionValues">
+              <list />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Application.ClinicManagerMain" />
+      <item itemvalue="Maven.RUClinic3 [execjava]" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.ClinicManagerMain" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
