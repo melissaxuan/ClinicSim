@@ -1,4 +1,4 @@
-package ruclinic;
+package projects.ruclinic.enhancedgui.ruclinic;
 
 /**
  * Class to represent Doctor object, a type of Provider.

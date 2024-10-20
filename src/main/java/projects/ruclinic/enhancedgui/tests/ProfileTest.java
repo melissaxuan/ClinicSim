@@ -1,8 +1,9 @@
-package tests;
-import org.junit.Test;
-import ruclinic.Profile;
-import util.Date;
+package projects.ruclinic.enhancedgui.tests;
 
+import projects.ruclinic.enhancedgui.ruclinic.Profile;
+import projects.ruclinic.enhancedgui.util.Date;
+
+import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 /**
  * Testclass for the class profiles compareTo method

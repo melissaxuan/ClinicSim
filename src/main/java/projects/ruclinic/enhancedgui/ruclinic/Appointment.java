@@ -1,6 +1,6 @@
-package ruclinic;
+package projects.ruclinic.enhancedgui.ruclinic;
 
-import util.Date;
+import projects.ruclinic.enhancedgui.util.Date;
 
 /**
  * This class defines the Appointment data type that has the instance variables Date, Timeslot, patient, provider.

@@ -1,6 +1,6 @@
-package ruclinic;
+package projects.ruclinic.enhancedgui.ruclinic;
 
-import util.Date;
+import projects.ruclinic.enhancedgui.util.Date;
 
 /**
  * Profile for Patient including Patient's first name, last name, and date of birth.
@@ -21,29 +21,6 @@ public class Profile implements Comparable<Profile> {
         this.dob = new Date();
     }
 
-    /**
-     * Getter method to get the first name of the current profile.
-     * @return first name of the current profile
-     */
-    public String getFname() {
-        return fname;
-    }
-
-    /**
-     * Getter method to get the last name of the current profile.
-     * @return last name of the current profile
-     */
-    public String getLname() {
-        return lname;
-    }
-
-    /**
-     * Getter method to get the date of birth of the current profile.
-     * @return date of birth of the current profile
-     */
-    public Date getDob() {
-        return dob;
-    }
 
     /**
      * Constructor for Profile: takes in patient's first name, last name, and date of birth.
@@ -101,4 +78,27 @@ public class Profile implements Comparable<Profile> {
         }
     }
 
+    /**
+     * Getter method to get the first name of the current profile.
+     * @return first name of the current profile
+     */
+    public String getFname() {
+        return fname;
+    }
+
+    /**
+     * Getter method to get the last name of the current profile.
+     * @return last name of the current profile
+     */
+    public String getLname() {
+        return lname;
+    }
+
+    /**
+     * Getter method to get the date of birth of the current profile.
+     * @return date of birth of the current profile
+     */
+    public Date getDob() {
+        return dob;
+    }
 }

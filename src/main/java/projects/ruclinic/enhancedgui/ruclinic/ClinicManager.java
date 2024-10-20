@@ -1,12 +1,12 @@
-package ruclinic;
+package projects.ruclinic.enhancedgui.ruclinic;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import util.Date;
-import util.List;
-import util.Sort;
+import projects.ruclinic.enhancedgui.util.Date;
+import projects.ruclinic.enhancedgui.util.List;
+import projects.ruclinic.enhancedgui.util.Sort;
 
 /**
  * Processes commands entered to the terminal.

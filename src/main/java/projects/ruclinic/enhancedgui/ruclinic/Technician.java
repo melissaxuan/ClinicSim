@@ -1,4 +1,4 @@
-package ruclinic;
+package projects.ruclinic.enhancedgui.ruclinic;
 
 /**
  * Class to represent Technician object, a type of Provider.

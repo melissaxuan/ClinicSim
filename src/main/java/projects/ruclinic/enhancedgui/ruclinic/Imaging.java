@@ -1,6 +1,6 @@
-package ruclinic;
+package projects.ruclinic.enhancedgui.ruclinic;
 
-import util.Date;
+import projects.ruclinic.enhancedgui.util.Date;
 
 /**
  *Class to represent imaging objects which contain a radiology variable

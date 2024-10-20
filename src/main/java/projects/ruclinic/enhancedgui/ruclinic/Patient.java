@@ -1,4 +1,4 @@
-package ruclinic;
+package projects.ruclinic.enhancedgui.ruclinic;
 
 /**
 * Contains Patient's Profile, list of completed visits, and charge() calculates charge accrued.

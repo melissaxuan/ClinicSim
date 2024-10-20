@@ -1,11 +1,10 @@
-package tests;
+package projects.ruclinic.enhancedgui.tests;
+import projects.ruclinic.enhancedgui.ruclinic.Doctor;
+import projects.ruclinic.enhancedgui.ruclinic.Technician;
+import projects.ruclinic.enhancedgui.ruclinic.Provider;
+import projects.ruclinic.enhancedgui.util.List;
 import org.junit.Test;
-import ruclinic.Doctor;
-import ruclinic.Technician;
-import ruclinic.Provider;
 import org.junit.Before;
-import util.List;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**

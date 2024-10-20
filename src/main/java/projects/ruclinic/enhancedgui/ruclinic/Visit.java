@@ -1,4 +1,4 @@
-package ruclinic;
+package projects.ruclinic.enhancedgui.ruclinic;
 
 /**
  * Defines a node in a singly linked list that maintains the list of Visits per Patient valued with Appointments.

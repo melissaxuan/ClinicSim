@@ -1,8 +1,8 @@
-package util;
+package projects.ruclinic.enhancedgui.util;
 
-import ruclinic.Appointment;
-import ruclinic.Patient;
-import ruclinic.Provider;
+import projects.ruclinic.enhancedgui.ruclinic.Appointment;
+import projects.ruclinic.enhancedgui.ruclinic.Patient;
+import projects.ruclinic.enhancedgui.ruclinic.Provider;
 
 /**
  * Sorts lists of objects in specific order.

@@ -1,4 +1,4 @@
-package ruclinic;
+package projects.ruclinic.enhancedgui.ruclinic;
 
 /**
  * Contains (String) County and (String) Zip for each Location.

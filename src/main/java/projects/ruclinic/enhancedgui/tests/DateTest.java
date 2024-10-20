@@ -1,9 +1,9 @@
-package tests;
+package projects.ruclinic.enhancedgui.tests;
 import org.junit.Test;
-import util.Date;
-
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+
+import projects.ruclinic.enhancedgui.util.Date;
 
 /**
  * Test class for the dates class isValid() method

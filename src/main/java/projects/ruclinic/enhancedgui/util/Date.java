@@ -1,4 +1,4 @@
-package util;
+package projects.ruclinic.enhancedgui.util;
 
 import java.util.Calendar;
 

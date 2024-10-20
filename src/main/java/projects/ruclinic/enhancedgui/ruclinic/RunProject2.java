@@ -1,4 +1,4 @@
-package ruclinic;
+package projects.ruclinic.enhancedgui.ruclinic;
 
 /**
  * Driver for CS213 Project 2, RUClinic2, calls run method in ClinicManager class.
