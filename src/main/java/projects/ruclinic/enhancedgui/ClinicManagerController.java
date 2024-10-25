@@ -5,12 +5,16 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.InputMethodEvent;
 import javafx.scene.text.Text;
 
 public class ClinicManagerController {
+
+    @FXML
+    private TextArea TA_printInfo;
 
     @FXML
     private Button bt_cancel;
@@ -31,6 +35,9 @@ public class ClinicManagerController {
     private ComboBox<?> cb_provider;
 
     @FXML
+    private ComboBox<?> cb_sortSelecter;
+
+    @FXML
     private ComboBox<?> cb_timeslot;
 
     @FXML
@@ -38,6 +45,9 @@ public class ClinicManagerController {
 
     @FXML
     private DatePicker dp_dob;
+
+    @FXML
+    private RadioButton rb_office;
 
     @FXML
     private TextArea ta_output;
@@ -64,6 +74,9 @@ public class ClinicManagerController {
     private Text txt_apptime;
 
     @FXML
+    private Text txt_apptype;
+
+    @FXML
     private Text txt_patientdob;
 
     @FXML
@@ -76,10 +89,12 @@ public class ClinicManagerController {
     private Text txt_patientlname;
 
     @FXML
-    private Text cb_sortSelecter;
+    void cancelApp(ActionEvent event) {
+
+    }
 
     @FXML
-    void cancelApp(ActionEvent event) {
+    void cb_sortSelecter(ActionEvent event) {
 
     }
 
@@ -90,11 +105,6 @@ public class ClinicManagerController {
 
     @FXML
     void disableImaging(InputMethodEvent event) {
-
-    }
-
-    @FXML
-    void disableProvider(InputMethodEvent event) {
 
     }
 
