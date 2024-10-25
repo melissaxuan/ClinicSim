@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.InputMethodEvent;
@@ -25,19 +26,25 @@ public class ClinicManagerController {
     private Button bt_schedule;
 
     @FXML
-    private ComboBox<?> cb_imaging;
-
-    @FXML
     private ComboBox<?> cb_provider;
 
     @FXML
+    private ComboBox<?> cb_provider1;
+
+    @FXML
     private ComboBox<?> cb_timeslot;
+
+    @FXML
+    private RadioButton cb_ultrasound1;
 
     @FXML
     private DatePicker dp_appdate;
 
     @FXML
     private DatePicker dp_dob;
+
+    @FXML
+    private RadioButton rb_catscan2;
 
     @FXML
     private TextArea ta_output;
@@ -58,6 +65,9 @@ public class ClinicManagerController {
     private Text txt_appimaging;
 
     @FXML
+    private Text txt_appimaging1;
+
+    @FXML
     private Text txt_appprovider;
 
     @FXML
@@ -76,9 +86,6 @@ public class ClinicManagerController {
     private Text txt_patientlname;
 
     @FXML
-    private Text cb_sortSelecter;
-
-    @FXML
     void cancelApp(ActionEvent event) {
 
     }
@@ -94,17 +101,7 @@ public class ClinicManagerController {
     }
 
     @FXML
-    void disableProvider(InputMethodEvent event) {
-
-    }
-
-    @FXML
     void getAppDate(ActionEvent event) {
-
-    }
-
-    @FXML
-    void getAppImaging(ActionEvent event) {
 
     }
 
