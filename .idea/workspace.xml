@@ -6,8 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="e2c0a333-de73-4cef-92f9-3856b3a4cdbe" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ClinicManagerMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ClinicManagerMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/projects/ruclinic/enhancedgui/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/projects/ruclinic/enhancedgui/clinic-view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ClinicManagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ClinicManagerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/projects/ruclinic/enhancedgui/clinic-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/projects/ruclinic/enhancedgui/clinic-view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,9 +17,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 2
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="2nu0HYRAnTXhIplt281puNMogIJ" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -29,7 +29,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "enhanced-gui-branch",
+    "git-widget-placeholder": "mikeybranch1",
     "kotlin-language-version-configured": "true",
     "settings.editor.selected.configurable": "preferences.keymap"
   }

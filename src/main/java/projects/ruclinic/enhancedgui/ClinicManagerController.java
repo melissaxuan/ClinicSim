@@ -76,6 +76,9 @@ public class ClinicManagerController {
     private Text txt_patientlname;
 
     @FXML
+    private Text cb_sortSelecter;
+
+    @FXML
     void cancelApp(ActionEvent event) {
 
     }
