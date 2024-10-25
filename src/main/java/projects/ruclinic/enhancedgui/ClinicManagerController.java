@@ -10,7 +10,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.InputMethodEvent;
 import javafx.scene.text.Text;
-import projects.ruclinic.enhancedgui.ruclinic.*;
+import projects.ruclinic.enhancedgui.ruclinic.Appointment;
+import projects.ruclinic.enhancedgui.ruclinic.Patient;
+import projects.ruclinic.enhancedgui.ruclinic.Provider;
+import projects.ruclinic.enhancedgui.ruclinic.Technician;
+import projects.ruclinic.enhancedgui.ruclinic.Doctor;
 import projects.ruclinic.enhancedgui.util.List;
 import projects.ruclinic.enhancedgui.util.Sort;
 
