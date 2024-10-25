@@ -27,8 +27,9 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.ClinicManagerMain.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "pleasefixBranch",
+    "git-widget-placeholder": "MIKEYBRANCHFIX",
     "kotlin-language-version-configured": "true",
     "settings.editor.selected.configurable": "preferences.sourceCode.XML"
   }
