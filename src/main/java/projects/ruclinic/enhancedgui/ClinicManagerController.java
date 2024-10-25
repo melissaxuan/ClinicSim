@@ -137,7 +137,7 @@ public class ClinicManagerController {
     void cb_sortSelecter(ActionEvent event) {
         ComboBox<String> comboBox = (ComboBox<String>) event.getSource();
         String sortSelected = comboBox.getValue();
-        TA_printInfo.clear();
+        TA_printInfo.setText("");
         switch (sortSelected) {
             case "Print by Appointment":
                 printByAppointment();
@@ -239,7 +239,7 @@ public class ClinicManagerController {
         for (Appointment a : appList) {
             TA_printInfo.appendText(a+ "\n");
         }
-        TA_printInfo.appendText("** End of List **");
+        TA_printInfo.appendText("** End of List **\n");
     }
      /**
      * Helper method that handles print by patient command: prints appointments sorted by patient (lname, fname, dob) then appointment date and time.
@@ -274,12 +274,12 @@ public class ClinicManagerController {
             return;
         }
         Sort.patient(patientList);
-        System.out.println("** Billing statement ordered by patient. **");
+        TA_printInfo.appendText("** Billing statement ordered by patient. **\n");
         for (int index = 0; index < this.patientList.size(); index++) {
-            TA_printInfo.appendText("(" + (index + 1) + ") " + this.patientList.get(index).toString()+"/n");
+            TA_printInfo.appendText("(" + (index + 1) + ") " + this.patientList.get(index).toString()+"\n");
         }
 
-        TA_printInfo.appendText("** end of list **");
+        TA_printInfo.appendText("** end of list **\n");
 
         this.patientList = new List<Patient>();
         this.appointmentList = new List<Appointment>();
@@ -292,7 +292,7 @@ public class ClinicManagerController {
         List<Appointment> docAppList = findDocAppointments();
         Sort.appointment(docAppList, Sort.PL_CMD);
         if (docAppList.isEmpty()) {
-            TA_printInfo.appendText("Schedule calendar is empty.");
+            TA_printInfo.appendText("Schedule calendar is empty.\n");
             return;
         }
         TA_printInfo.appendText("** List of office appointments ordered by county/date/time.\n");
@@ -305,7 +305,7 @@ public class ClinicManagerController {
         List<Appointment> techAppList = findTechAppointments();
         Sort.appointment(techAppList, Sort.PL_CMD);
         if (techAppList.isEmpty()) {
-            TA_printInfo.appendText("Schedule calendar is empty.");
+            TA_printInfo.appendText("Schedule calendar is empty.\n");
             return;
         }
         TA_printInfo.appendText("** List of radiology appointments ordered by county/date/time.\n");
@@ -352,7 +352,7 @@ public class ClinicManagerController {
      */
     private void calculateCredit() {
         if (this.appointmentList.isEmpty()) {
-            System.out.println("Schedule calendar is empty.");
+            TA_printInfo.appendText("Schedule calendar is empty.\n");
             return;
         }
         TA_printInfo.appendText("** Credit amount ordered by provider. **");
@@ -368,6 +368,6 @@ public class ClinicManagerController {
                     " [credit amount: $" + String.format("%,d", credit) + ".00]" +"\n");
            index++;
         }
-        TA_printInfo.appendText("** end of list **");
+        TA_printInfo.appendText("** end of list **\n");
     }
 }
