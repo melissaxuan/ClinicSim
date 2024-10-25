@@ -32,11 +32,6 @@ import projects.ruclinic.enhancedgui.util.List;
 import projects.ruclinic.enhancedgui.util.Sort;
 
 public class ClinicManagerController {
-    private List<Provider> providersList;
-    private List<Technician> technicianList;
-    private List<Appointment> appointmentList;
-    private List<Patient> patientList;
-    private int techListPtr;
 
     @FXML
     private TextArea TA_printInfo;
@@ -306,7 +301,7 @@ public class ClinicManagerController {
     private void printByLocation() {
         Sort.appointment(appointmentList, Sort.PL_CMD);
         if (this.appointmentList.isEmpty()) {
-            TA_printInfo.appendText("Schedule calendar is empty.\n");
+            TA_printInfo.appendText("Schedule calendar is empty. \n");
             return;
         }
         TA_printInfo.appendText("** List of appointments, ordered by county/date/time. \n");
