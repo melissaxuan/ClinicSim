@@ -88,6 +88,9 @@ public class ClinicManagerController {
     @FXML
     private Text txt_patientlname;
 
+
+
+
     @FXML
     void cancelApp(ActionEvent event) {
 
