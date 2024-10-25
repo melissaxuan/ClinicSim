@@ -23,8 +23,15 @@ import projects.ruclinic.enhancedgui.util.Sort;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import projects.ruclinic.enhancedgui.ruclinic.Appointment;
+import projects.ruclinic.enhancedgui.ruclinic.Patient;
+import projects.ruclinic.enhancedgui.ruclinic.Provider;
+import projects.ruclinic.enhancedgui.ruclinic.Technician;
+import projects.ruclinic.enhancedgui.util.List;
+import projects.ruclinic.enhancedgui.util.Sort;
 
 public class ClinicManagerController {
+
 
     @FXML
     private TextArea TA_printInfo;
@@ -106,14 +113,31 @@ public class ClinicManagerController {
 
     private List<Provider> providersList;
     private List<Technician> techniciansList;
+    private List<Technician> technicianList;
+    private List<Appointment> appointmentList;
+    private List<Patient> patientList;
+    private int techListPtr;
 
+    /**
+     * Default constructor to initialize List and MedicalRecord objects.
+     */
     public ClinicManagerController() {
-        providersList = new List<Provider>();
-        techniciansList = new List<Technician>();
+        this.providersList = new List<Provider>();
+        this.technicianList = new List<Technician>();
+        this.appointmentList = new List<Appointment>();
+        this.patientList = new List<Patient>();
+        this.techListPtr = 0;
     }
-
     public void initialize() {
-
+        cb_sortSelecter.getItems().addAll(
+                "Print by Appointment",
+                "Print by Patient",
+                "Print by Location",
+                "Print Bill",
+                "Print by Office",
+                "Print by Imaging",
+                "Print Credit"
+        );
     }
 
     @FXML
@@ -123,6 +147,34 @@ public class ClinicManagerController {
 
     @FXML
     void cb_sortSelecter(ActionEvent event) {
+        ComboBox<String> comboBox = (ComboBox<String>) event.getSource();
+        String sortSelected = comboBox.getValue();
+        System.out.println(sortSelected);
+        switch (sortSelected) {
+            case "Print by Appointment":
+                printByAppointment();
+                break;
+            case "Print by Patient":
+          //      printByPatient();
+                break;
+            case "Print by Location ":
+          //      printByLocation();
+                break;
+            case "Print Bill":
+           //     printBill();
+                break;
+            case "Print by Office":
+           //     printByOffice();
+                break;
+            case "Print by Imaging":
+           //     printByImaging();
+                break;
+           case "Print Credit":
+           //     printCredit();
+                break;
+            default:
+                break;
+       }
 
     }
 
@@ -205,6 +257,27 @@ public class ClinicManagerController {
     @FXML
     void scheduleApp(ActionEvent event) {
 
+    }
+        /**
+     * Helper method that handles print by appointment command: prints appointments sorted by appointment date, time, then provider's name.
+     */
+    private void printByAppointment() {
+        Sort.appointment(appointmentList, Sort.PA_CMD);
+       if (this.appointmentList.isEmpty()) {
+           TA_printInfo.appendText("Schedule calendar is empty. \n");
+            return;
+        }
+        TA_printInfo.appendText("** List of appointments, ordered by date/time/provider.\n");
+        printAppointmentList(this.appointmentList);
+    }
+        /**
+     * Helper method to print out all the Appointments in List of Appointments.
+     */
+    private void printAppointmentList(List<Appointment> appList) {
+        for (Appointment a : appList) {
+            TA_printInfo.appendText(a+ "\n");
+        }
+        TA_printInfo.appendText("** End of List **");
     }
 
         /**
