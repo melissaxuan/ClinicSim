@@ -7,6 +7,7 @@
     <list default="true" id="e2c0a333-de73-4cef-92f9-3856b3a4cdbe" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ClinicManagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ClinicManagerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ClinicManagerMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ClinicManagerMain.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +30,6 @@
   "keyToString": {
     "Application.ClinicManagerMain.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Merging enhanced-gui-branch",
     "kotlin-language-version-configured": "true",
     "settings.editor.selected.configurable": "preferences.sourceCode.XML"
   }
@@ -54,14 +54,9 @@
     </task>
     <servers />
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <breakpoint enabled="true" log-message="true" type="java-exception">
-          <properties class="java.lang.IllegalArgumentException" package="java.lang" />
-          <option name="timeStamp" value="1" />
-        </breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/RUClinic3$ClinicManagerMain.ic" NAME="ClinicManagerMain Coverage Results" MODIFIED="1729898474677" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>projects.ruclinic.enhancedgui.*</FILTER>
+    </SUITE>
   </component>
 </project>

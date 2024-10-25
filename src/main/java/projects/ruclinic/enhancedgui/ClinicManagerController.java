@@ -33,7 +33,6 @@ import projects.ruclinic.enhancedgui.util.Sort;
 
 public class ClinicManagerController {
 
-
     @FXML
     private TextArea TA_printInfo;
 
@@ -160,7 +159,7 @@ public class ClinicManagerController {
     void cb_sortSelecter(ActionEvent event) {
         ComboBox<String> comboBox = (ComboBox<String>) event.getSource();
         String sortSelected = comboBox.getValue();
-
+        TA_printInfo.setText("");
         switch (sortSelected) {
             case "Print by Appointment":
                 printByAppointment();
@@ -325,7 +324,7 @@ public class ClinicManagerController {
     private void printByLocation() {
         Sort.appointment(appointmentList, Sort.PL_CMD);
         if (this.appointmentList.isEmpty()) {
-            TA_printInfo.appendText("Schedule calendar is empty.\n");
+            TA_printInfo.appendText("Schedule calendar is empty. \n");
             return;
         }
         TA_printInfo.appendText("** List of appointments, ordered by county/date/time. \n");
@@ -358,7 +357,7 @@ public class ClinicManagerController {
         List<Appointment> docAppList = findDocAppointments();
         Sort.appointment(docAppList, Sort.PL_CMD);
         if (docAppList.isEmpty()) {
-            TA_printInfo.appendText("Schedule calendar is empty.");
+            TA_printInfo.appendText("Schedule calendar is empty.\n");
             return;
         }
         TA_printInfo.appendText("** List of office appointments ordered by county/date/time.\n");
@@ -371,7 +370,7 @@ public class ClinicManagerController {
         List<Appointment> techAppList = findTechAppointments();
         Sort.appointment(techAppList, Sort.PL_CMD);
         if (techAppList.isEmpty()) {
-            TA_printInfo.appendText("Schedule calendar is empty.");
+            TA_printInfo.appendText("Schedule calendar is empty.\n");
             return;
         }
         TA_printInfo.appendText("** List of radiology appointments ordered by county/date/time.\n");
@@ -418,7 +417,7 @@ public class ClinicManagerController {
      */
     private void calculateCredit() {
         if (this.appointmentList.isEmpty()) {
-            System.out.println("Schedule calendar is empty.");
+            TA_printInfo.appendText("Schedule calendar is empty.\n");
             return;
         }
         TA_printInfo.appendText("** Credit amount ordered by provider. **");
@@ -434,7 +433,7 @@ public class ClinicManagerController {
                     " [credit amount: $" + String.format("%,d", credit) + ".00]" +"\n");
            index++;
         }
-        TA_printInfo.appendText("** end of list **");
+        TA_printInfo.appendText("** end of list **\n");
     }
         /**
      * Helper method to add Provider to list of providers according to whether the Provider is a Doctor or Technician.
