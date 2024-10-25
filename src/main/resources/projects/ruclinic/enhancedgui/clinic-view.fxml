@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" prefHeight="600.0" prefWidth="344.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="projects.ruclinic.enhancedgui.ClinicManagerController">
+<VBox alignment="CENTER" prefHeight="600.0" prefWidth="344.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="projects.ruclinic.enhancedgui.ClinicManagerController">
   <TabPane prefHeight="600.0" prefWidth="344.0" tabClosingPolicy="UNAVAILABLE">
     <tabs>
       <Tab text="Home">
@@ -90,12 +90,15 @@
                       <Text fx:id="txt_apptype" strokeType="OUTSIDE" strokeWidth="0.0" text="Type: " textAlignment="RIGHT" textOrigin="BOTTOM" wrappingWidth="78.58118057250977" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                       <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                         <children>
-                          <RadioButton  fx:id="rb_office" mnemonicParsing="false" selected="true" text="Office">
+                          <RadioButton fx:id="rb_office" mnemonicParsing="false" onAction="#setOffice" selected="true" text="Office">
                             <padding>
                               <Insets bottom="3.0" right="3.0" top="3.0" />
                             </padding>
+                                          <toggleGroup>
+                                             <ToggleGroup fx:id="tg_apptype" />
+                                          </toggleGroup>
                           </RadioButton>
-                          <RadioButton fx:id="rb_imaging" mnemonicParsing="false" text="Imaging">
+                          <RadioButton fx:id="rb_imaging" mnemonicParsing="false" onAction="#setImaging" text="Imaging" toggleGroup="$tg_apptype">
                             <padding>
                               <Insets bottom="3.0" right="3.0" top="3.0" />
                             </padding>
