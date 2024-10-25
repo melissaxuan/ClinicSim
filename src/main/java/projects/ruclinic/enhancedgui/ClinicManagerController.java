@@ -52,10 +52,10 @@ public class ClinicManagerController {
     private Button bt_schedule;
 
     @FXML
-    private ComboBox<Radiology> cb_imaging;
+    private ComboBox<String> cb_imaging;
 
     @FXML
-    private ComboBox<Provider> cb_provider;
+    private ComboBox<String> cb_provider;
 
     @FXML
     private ComboBox<String> cb_sortSelecter;
@@ -112,7 +112,6 @@ public class ClinicManagerController {
     private Text txt_patientlname;
 
     private List<Provider> providersList;
-    private List<Technician> techniciansList;
     private List<Technician> technicianList;
     private List<Appointment> appointmentList;
     private List<Patient> patientList;
@@ -138,6 +137,10 @@ public class ClinicManagerController {
                 "Print by Imaging",
                 "Print Credit"
         );
+        cb_provider.setPromptText("(No Provider File Loaded)");
+        cb_imaging.setPromptText("(No Provider File Loaded)");
+
+//        cb_imaging.setItems(Radiology.values());
     }
 
     @FXML
@@ -235,12 +238,12 @@ public class ClinicManagerController {
                 }
 
                 Sort.provider(providersList);
-//                printProvidersList();
-                ObservableList<Provider> providers;
-                providers = FXCollections.observableArrayList();
-                cb_provider.setItems(providers);
-//                printTechnicianList();
-
+                for (Provider p : providersList) {
+                    if (p instanceof Doctor)
+                        cb_provider.getItems().add(p.toString());
+                }
+                cb_provider.setPromptText("(Select a Provider)");
+                cb_imaging.setPromptText("(Select an Imaging Service)");
                 scan.close();
             }
         }
@@ -258,7 +261,24 @@ public class ClinicManagerController {
     void scheduleApp(ActionEvent event) {
 
     }
-        /**
+
+    @FXML
+    public void setOffice(ActionEvent event) {
+        txt_appprovider.setOpacity(1.0);
+        cb_provider.setDisable(false);
+        txt_appimaging.setOpacity(0.25);
+        cb_imaging.setDisable(true);
+    }
+
+    @FXML
+    public void setImaging(ActionEvent event) {
+        txt_appprovider.setOpacity(0.25);
+        cb_provider.setDisable(true);
+        txt_appimaging.setOpacity(1.0);
+        cb_imaging.setDisable(false);
+    }
+
+    /**
      * Helper method that handles print by appointment command: prints appointments sorted by appointment date, time, then provider's name.
      */
     private void printByAppointment() {
@@ -304,10 +324,10 @@ public class ClinicManagerController {
      * @param newTechnician new Technician object to be added to the list of Technicians
      */
     private void addTechnician(Technician newTechnician) {
-        for (int index = techniciansList.size(); index > 0; index--) {
-            techniciansList.set(index, techniciansList.get(index - 1));
+        for (int index = technicianList.size(); index > 0; index--) {
+            technicianList.set(index, technicianList.get(index - 1));
         }
 
-        techniciansList.set(0, newTechnician);
+        technicianList.set(0, newTechnician);
     }
 }
