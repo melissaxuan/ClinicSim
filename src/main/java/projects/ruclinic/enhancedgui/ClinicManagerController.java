@@ -1,5 +1,7 @@
 package projects.ruclinic.enhancedgui;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -10,6 +12,17 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.InputMethodEvent;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import projects.ruclinic.enhancedgui.ruclinic.Doctor;
+import projects.ruclinic.enhancedgui.ruclinic.Provider;
+import projects.ruclinic.enhancedgui.ruclinic.Radiology;
+import projects.ruclinic.enhancedgui.ruclinic.Technician;
+import projects.ruclinic.enhancedgui.util.List;
+import projects.ruclinic.enhancedgui.util.Sort;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 import projects.ruclinic.enhancedgui.ruclinic.Appointment;
 import projects.ruclinic.enhancedgui.ruclinic.Patient;
 import projects.ruclinic.enhancedgui.ruclinic.Provider;
@@ -25,27 +38,6 @@ public class ClinicManagerController {
     private List<Patient> patientList;
     private int techListPtr;
 
-        /**
-     * Default constructor to initialize List and MedicalRecord objects.
-     */
-    public ClinicManagerController() {
-        this.providersList = new List<Provider>();
-        this.technicianList = new List<Technician>();
-        this.appointmentList = new List<Appointment>();
-        this.patientList = new List<Patient>();
-        this.techListPtr = 0;
-    }
-    public void initialize() {
-        cb_sortSelecter.getItems().addAll(
-                "Print by Appointment",
-                "Print by Patient",
-                "Print by Location",
-                "Print Bill",
-                "Print by Office",
-                "Print by Imaging",
-                "Print Credit"
-        );
-    }
     @FXML
     private TextArea TA_printInfo;
 
@@ -56,22 +48,25 @@ public class ClinicManagerController {
     private Button bt_clear;
 
     @FXML
+    private Button bt_loadprovider;
+
+    @FXML
     private Button bt_reschedule;
 
     @FXML
     private Button bt_schedule;
 
     @FXML
-    private ComboBox<?> cb_imaging;
+    private ComboBox<Radiology> cb_imaging;
 
     @FXML
-    private ComboBox<?> cb_provider;
+    private ComboBox<Provider> cb_provider;
 
     @FXML
     private ComboBox<String> cb_sortSelecter;
 
     @FXML
-    private ComboBox<?> cb_timeslot;
+    private ComboBox<String> cb_timeslot;
 
     @FXML
     private DatePicker dp_appdate;
@@ -80,7 +75,7 @@ public class ClinicManagerController {
     private DatePicker dp_dob;
 
     @FXML
-    private RadioButton rb_office;
+    private RadioButton rb_apptype;
 
     @FXML
     private TextArea ta_output;
@@ -121,8 +116,34 @@ public class ClinicManagerController {
     @FXML
     private Text txt_patientlname;
 
+    private List<Provider> providersList;
+    private List<Technician> techniciansList;
+    private List<Technician> technicianList;
+    private List<Appointment> appointmentList;
+    private List<Patient> patientList;
+    private int techListPtr;
 
-
+    /**
+     * Default constructor to initialize List and MedicalRecord objects.
+     */
+    public ClinicManagerController() {
+        this.providersList = new List<Provider>();
+        this.technicianList = new List<Technician>();
+        this.appointmentList = new List<Appointment>();
+        this.patientList = new List<Patient>();
+        this.techListPtr = 0;
+    }
+    public void initialize() {
+        cb_sortSelecter.getItems().addAll(
+                "Print by Appointment",
+                "Print by Patient",
+                "Print by Location",
+                "Print Bill",
+                "Print by Office",
+                "Print by Imaging",
+                "Print Credit"
+        );
+    }
 
     @FXML
     void cancelApp(ActionEvent event) {
@@ -182,11 +203,6 @@ public class ClinicManagerController {
     }
 
     @FXML
-    void getAppImaging(ActionEvent event) {
-
-    }
-
-    @FXML
     void getAppProvider(ActionEvent event) {
 
     }
@@ -209,6 +225,37 @@ public class ClinicManagerController {
     @FXML
     void getPatientLastName(ActionEvent event) {
 
+    }
+
+    @FXML
+    void loadProviders(ActionEvent event) {
+        try {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open File");
+            File providersFile = fileChooser.showOpenDialog(null);
+            if (providersFile != null) {
+                Scanner scan = new Scanner(providersFile);
+                String input = "";
+
+                while (scan.hasNextLine()) {
+                    input = scan.nextLine();
+
+                    addProvider(input);
+                }
+
+                Sort.provider(providersList);
+//                printProvidersList();
+                ObservableList<Provider> providers;
+                providers = FXCollections.observableArrayList();
+                cb_provider.setItems(providers);
+//                printTechnicianList();
+
+                scan.close();
+            }
+        }
+        catch (FileNotFoundException e) {
+            System.out.println("File could not be found.");
+        }
     }
 
     @FXML
@@ -239,7 +286,7 @@ public class ClinicManagerController {
         for (Appointment a : appList) {
             TA_printInfo.appendText(a+ "\n");
         }
-        TA_printInfo.appendText("** End of List **\n");
+        TA_printInfo.appendText("** End of List **");
     }
      /**
      * Helper method that handles print by patient command: prints appointments sorted by patient (lname, fname, dob) then appointment date and time.
@@ -274,12 +321,12 @@ public class ClinicManagerController {
             return;
         }
         Sort.patient(patientList);
-        TA_printInfo.appendText("** Billing statement ordered by patient. **\n");
+        System.out.println("** Billing statement ordered by patient. **");
         for (int index = 0; index < this.patientList.size(); index++) {
-            TA_printInfo.appendText("(" + (index + 1) + ") " + this.patientList.get(index).toString()+"\n");
+            TA_printInfo.appendText("(" + (index + 1) + ") " + this.patientList.get(index).toString()+"/n");
         }
 
-        TA_printInfo.appendText("** end of list **\n");
+        TA_printInfo.appendText("** end of list **");
 
         this.patientList = new List<Patient>();
         this.appointmentList = new List<Appointment>();
@@ -369,5 +416,35 @@ public class ClinicManagerController {
            index++;
         }
         TA_printInfo.appendText("** end of list **\n");
+    }
+        /**
+     * Helper method to add Provider to list of providers according to whether the Provider is a Doctor or Technician.
+     *
+     * @param input String of inputted details for Provider
+     */
+    private void addProvider(String input) {
+        String[] tokens = input.split("  ");
+        if (tokens[0].equals("D")) {
+            Doctor doctor = new Doctor(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6]);
+            this.providersList.add(doctor);
+        } else if (tokens[0].equals("T")) {
+            Technician technician = new Technician(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5]);
+            this.providersList.add(technician);
+            addTechnician(technician);
+        }
+    }
+
+
+    /**
+     * Helper method to add a new technician to list of Technicians in reverse order.
+     *
+     * @param newTechnician new Technician object to be added to the list of Technicians
+     */
+    private void addTechnician(Technician newTechnician) {
+        for (int index = techniciansList.size(); index > 0; index--) {
+            techniciansList.set(index, techniciansList.get(index - 1));
+        }
+
+        techniciansList.set(0, newTechnician);
     }
 }

@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e2c0a333-de73-4cef-92f9-3856b3a4cdbe" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ClinicManagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ClinicManagerController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -29,7 +28,7 @@
   "keyToString": {
     "Application.ClinicManagerMain.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "yaybranch",
+    "git-widget-placeholder": "newbranchmikey",
     "kotlin-language-version-configured": "true",
     "settings.editor.selected.configurable": "preferences.sourceCode.XML"
   }
@@ -53,10 +52,5 @@
       <updated>1729807570795</updated>
     </task>
     <servers />
-  </component>
-  <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/RUClinic3$ClinicManagerMain.ic" NAME="ClinicManagerMain Coverage Results" MODIFIED="1729898474677" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
-      <FILTER>projects.ruclinic.enhancedgui.*</FILTER>
-    </SUITE>
   </component>
 </project>
