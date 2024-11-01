@@ -30,6 +30,15 @@ public enum Specialty {
     }
 
     /**
+     * Getter method to get the name
+     * @return the current  speciality name
+     */
+    public String getSpecName()
+    {
+        return this.name();
+    }
+
+    /**
      * getter method to get the speciality enum
      * @param specialty string to be converted into the proper enum
      * @return the proper enum converted from the string or null

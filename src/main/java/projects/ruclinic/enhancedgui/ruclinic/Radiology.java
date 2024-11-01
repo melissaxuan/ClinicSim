@@ -15,6 +15,11 @@ public enum Radiology {
     Radiology() {
 
     }
+    /**
+     * Getter method to return Radiology name
+     * @return name of Radiology
+     */
+    public String getRadName() {return this.name();}
 
     /**
      * Method to convert a string to the proper enum value.

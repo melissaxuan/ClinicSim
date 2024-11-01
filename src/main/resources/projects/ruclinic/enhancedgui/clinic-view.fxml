@@ -174,17 +174,30 @@
           </AnchorPane>
         </content>
       </Tab>
-      <Tab text="Clinic Locations">
+      <Tab text="Print Data">
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="271.0" prefWidth="200.0">
             <children>
-              <TableView id="tv_printLocation" fx:id="tv_printLocation" prefHeight="308.0" prefWidth="344.0">
+              <TableView id="tv_printLocation" fx:id="tv_printLocation" prefHeight="308.0" prefWidth="344.0" visible="false">
                 <columns>
                   <TableColumn id="tc_col1" fx:id="tc_col1" prefWidth="75.0" text="City" />
                   <TableColumn id="tc_col2" fx:id="tc_col2" prefWidth="75.0" text="County" />
                            <TableColumn id="tc_col3" fx:id="tc_col3" prefWidth="75.0" text="ZIP" />
                 </columns>
               </TableView>
+                     <ComboBox fx:id="cb_tablePrint" layoutX="14.0" layoutY="354.0" onAction="#cb_tablePrint" prefWidth="150.0" promptText="(Select Table)" />
+                     <Label layoutX="7.0" layoutY="328.0" text="SELECT THE VALUES FOR THE TABLE TO PRINT:" />
+                     <TableView id="tv_printLocation" fx:id="tv_printSpecialty" layoutX="-2.0" layoutY="-3.0" prefHeight="321.0" prefWidth="356.0" visible="false">
+                        <columns>
+                           <TableColumn id="tc_col1" fx:id="tc_col4" prefWidth="75.0" text="Specialty" />
+                           <TableColumn id="tc_col2" fx:id="tc_col5" prefWidth="75.0" text="Charge" />
+                        </columns>
+                     </TableView>
+                     <TableView id="tv_printLocation" fx:id="tv_printRadiology" layoutX="-1.0" prefHeight="311.0" prefWidth="344.0" visible="false">
+                        <columns>
+                           <TableColumn id="tc_col1" fx:id="tc_col6" prefWidth="75.0" text="Name" />
+                        </columns>
+                     </TableView>
             </children>
           </AnchorPane>
         </content>
