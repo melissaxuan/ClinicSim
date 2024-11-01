@@ -13,6 +13,7 @@ import projects.ruclinic.enhancedgui.util.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 import projects.ruclinic.enhancedgui.ruclinic.Provider;
@@ -105,7 +106,7 @@ public class ClinicManagerController {
     private Text txt_patientlname;
 
     @FXML
-    private ToggleGroup rb_apptype;
+    private ToggleGroup tg_apptype;
 
     private List<Provider> providersList;
     private List<Technician> technicianList;
@@ -142,13 +143,13 @@ public class ClinicManagerController {
         cb_imaging.setPromptText("(No Provider File Loaded)");
 
         for (int i = Timeslot.EARLIEST_TIMESLOT; i <= Timeslot.LATEST_TIMESLOT; i++) {
-            cb_timeslot.getItems().add(timeslotList.get(i));
+            cb_timeslot.getItems().add(timeslotList.get(i - 1));
         }
 
-        rb_apptype = new ToggleGroup();
-        rb_office.setToggleGroup(rb_apptype);
-        rb_office.setSelected(true);
-        rb_imaging.setToggleGroup(rb_apptype);
+//        tg_apptype = new ToggleGroup();
+//        rb_office.setToggleGroup(tg_apptype);
+//        rb_office.setSelected(true);
+//        rb_imaging.setToggleGroup(tg_apptype);
     }
 
     @FXML
@@ -282,7 +283,32 @@ public class ClinicManagerController {
 
     @FXML
     void rescheduleApp(ActionEvent event) {
-
+        String missing = checkMissingData();
+        if (!missing.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Missing Information");
+            alert.setHeaderText(null);
+            alert.setContentText(missing);
+            alert.setResizable(true);
+            alert.getDialogPane().setPrefSize(480, 150);
+            alert.showAndWait();
+        }
+        else {
+            if (tg_apptype.getSelectedToggle().equals(rb_office)) {
+                String[] tokens = {"D", dp_appdate.getValue().toString(), Integer.toString(cb_timeslot.getSelectionModel().getSelectedIndex() + 1),
+                        tf_fname.toString(), tf_lname.toString(), dp_dob.getValue().toString(), cb_doctor.getValue().getNpi().toString()};
+//                scheduleDoc(tokens);
+            }
+            else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Reschedule ALert");
+                alert.setHeaderText(null);
+                alert.setContentText("Appointments with Technicians can not be rescheduled.");
+                alert.setResizable(true);
+                alert.getDialogPane().setPrefSize(480, 150);
+                alert.showAndWait();
+            }
+        }
     }
 
     @FXML
@@ -299,10 +325,19 @@ public class ClinicManagerController {
             alert.showAndWait();
         }
         else {
-            if (rb_apptype.getSelectedToggle().equals(rb_office)) {
-                String[] tokens = {"D", dp_appdate.getValue().toString(), Integer.toString(cb_timeslot.getSelectionModel().getSelectedIndex() + 1),
-                        tf_fname.toString(), tf_lname.toString(), dp_dob.getValue().toString(), cb_doctor.getValue().getNpi().toString()};
+            if (tg_apptype.getSelectedToggle().equals(rb_office)) {
+                String[] tokens = {"D", convertDate(dp_appdate.getValue()),
+                        Integer.toString(cb_timeslot.getSelectionModel().getSelectedIndex() + 1),
+                        tf_fname.toString(), tf_lname.toString(), convertDate(dp_dob.getValue()),
+                        cb_doctor.getValue().getNpi()};
                 scheduleDoc(tokens);
+            }
+            else {
+                String[] tokens = {"T", convertDate(dp_appdate.getValue()),
+                        Integer.toString(cb_timeslot.getSelectionModel().getSelectedIndex() + 1),
+                        tf_fname.toString(), tf_lname.toString(), convertDate(dp_dob.getValue()),
+                        cb_imaging.getValue().toString()};
+                scheduleTech(tokens);
             }
         }
     }
@@ -540,6 +575,57 @@ public class ClinicManagerController {
     }
 
     /**
+     * Helper method to schedule an appointment with a technician.
+     *
+     * @param tokens array of details to schedule an appointment with a technician, including specified imaging service
+     */
+    private void scheduleTech(String[] tokens) {
+        if (tokens.length != 7) {
+            System.out.println("Missing data tokens.");
+            return;
+        }
+
+        if (isAppDatesTimeValid(tokens)) {
+            Date appDate = new Date(tokens[1]);
+            Timeslot timeslot = new Timeslot(Integer.parseInt(tokens[2]));
+            Profile profile = new Profile(tokens[3], tokens[4], new Date(tokens[5]));
+            Patient patient = new Patient(profile);
+            Technician provider = new Technician();
+            String imaging = tokens[6];
+            if (this.appointmentList.contains(new Appointment(appDate, timeslot, patient, provider))) {
+                System.out.println(patient.getProfile().toString() + " has an existing appointment at the same time slot.");
+            } else if (!checkImaging(imaging)) {
+                System.out.println(imaging + " - imaging service is not provided.");
+            } else {
+                Technician technician = findTechnician(appDate, timeslot, imaging);
+                if (technician == null) {
+                    System.out.println("Cannot find an available technician at all locations for " + imaging.toUpperCase() +
+                            " at slot " + tokens[2] + ".");
+                } else {
+                    Patient newPatient = findPatient(patient);
+                    Imaging newApp = new Imaging(appDate, timeslot, newPatient, technician, imaging);
+                    appointmentList.add(newApp);
+                    newPatient.addVisit(newApp);
+                    System.out.println(newApp.toString() + " booked.");
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks if imaging service is a provided imaging service.
+     *
+     * @param imaging name of requested imaging service
+     * @return true if the imaging service is provided, false if not
+     */
+    private boolean checkImaging(String imaging) {
+        for (Radiology r : Radiology.values()) {
+            if (imaging.equalsIgnoreCase(r.name())) return true;
+        }
+        return false;
+    }
+
+    /**
      * Checks if there are a valid number of tokens in the command and if the dates and times are valid.
      *
      * @param tokens array of details to schedule an appointment with a doctor, including doctor's npi
@@ -597,6 +683,36 @@ public class ClinicManagerController {
     }
 
     /**
+     * Finds the next available technician that is available at the specified date and time, and the location is available for the imaging service.
+     *
+     * @param date     requested date of the appointment
+     * @param timeslot requested time slot of the appointment
+     * @param imaging  requested imaging service
+     * @return Technician object if an available technician is found, null if no technician is available matching request
+     */
+    private Technician findTechnician(Date date, Timeslot timeslot, String imaging) {
+        int counter = 0;
+        while (counter < technicianList.size()) {
+            if (techListPtr > technicianList.size() - 1) {
+                techListPtr = 0;
+            }
+
+            if (isTechnicianAvailable(technicianList.get(techListPtr),
+                    date, timeslot, imaging)) {
+                return technicianList.get(techListPtr++);
+            }
+
+            if (techListPtr >= technicianList.size() - 1) {
+                techListPtr = 0;
+            } else {
+                techListPtr++;
+            }
+            counter++;
+        }
+        return null;
+    }
+
+    /**
      * Checks if provider is available at the specific date and timeslot.
      *
      * @param provider provider to check availability for
@@ -611,6 +727,54 @@ public class ClinicManagerController {
                 return false;
             }
         }
+        return true;
+    }
+
+    /**
+     * Checks if technician is available at the requested date and time, and if the imaging service is available at their location.
+     *
+     * @param technician Technician to be checked
+     * @param date       requested date of appointment
+     * @param time       requested time slot of appointment
+     * @param imaging    requested imaging service
+     * @return true if specified technician is available according to requested details, false if specified technician is unavailable
+     */
+    private boolean isTechnicianAvailable(Technician technician, Date date, Timeslot time, String imaging) {
+        if (this.appointmentList.isEmpty()) {
+            return true;
+        }
+        for (Appointment a : this.appointmentList) {
+            if (a instanceof Imaging) {
+                if ((a.getProvider().equals(technician) && a.getDate().equals(date) && a.getTimeslot().equals(time)) ||
+                        !isLocationAvailable(date, time, imaging, technician.getLocation())) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if imaging service room is available at requested date and timeslot at the specified technician's location.
+     *
+     * @param date     requested date of appointment
+     * @param timeslot requested time slot of appointment
+     * @param imaging  requested imaging service
+     * @param location specified technician's location
+     * @return true if imaging service room is available according to requests, false if imaging service room is unavailable
+     */
+    private boolean isLocationAvailable(Date date, Timeslot timeslot, String imaging, Location location) {
+        for (Appointment a : appointmentList) {
+            if (a instanceof Imaging) {
+                Imaging i = (Imaging) a;
+                if (i.getDate().equals(date) && i.getTimeslot().equals(timeslot) &&
+                        i.getProvider().getLocation().name().equals(location.name()) && i.getRoom().name().equalsIgnoreCase(imaging)) {
+                    return false;
+                }
+            }
+        }
+
         return true;
     }
 
@@ -637,7 +801,7 @@ public class ClinicManagerController {
      * @return true if the intended Date object contains only numerical characters disregarding the '/'s, false otherwise
      */
     private boolean checkDateDigits(String s, String use) {
-        String[] dateVals = s.split("/");
+        String[] dateVals = s.split("-");
 
         for (String d : dateVals) {
             if (!checkDigits(d)) {
@@ -764,11 +928,11 @@ public class ClinicManagerController {
             missing = missing + ", time slot of the appointment";
             missingCount++;
         }
-        if (rb_apptype.getSelectedToggle().equals(rb_office) && cb_doctor.getValue() == null) {
+        if (tg_apptype.getSelectedToggle().equals(rb_office) && cb_doctor.getValue() == null) {
             missing = missing + ", provider of the appointment";
             missingCount++;
         }
-        if (rb_apptype.getSelectedToggle().equals(rb_imaging) && cb_imaging.getValue() == null) {
+        if (tg_apptype.getSelectedToggle().equals(rb_imaging) && cb_imaging.getValue() == null) {
             missing = missing + ", imaging type of the appointment";
             missingCount++;
         }
@@ -795,5 +959,11 @@ public class ClinicManagerController {
         for (int i = Timeslot.EARLIEST_TIMESLOT; i <= Timeslot.LATEST_TIMESLOT; i++) {
             this.timeslotList.add(new Timeslot(i));
         }
+    }
+
+    private String convertDate(LocalDate date) {
+        String d = date.toString();
+        String[] dateFormat = d.split("-");
+        return dateFormat[1] + "/" + dateFormat[2] + "/" + dateFormat[0];
     }
 }
