@@ -50,12 +50,19 @@ public enum Location {
     public String getZip() {
         return zip;
     }
+    /**
+     * Getter method to return location name
+     * @return name of the location
+     */
+    public String getLocName() {return this.name();}
+
 
     /**
      * Method used to convert the string to the proper location enum.
      * @param location location to be set
      * @return the enum version of the string location passed in or null
      */
+
     public static Location getLocation(String location) {
         switch (location.toUpperCase()) {
             case ("BRIDGEWATER") : return Location.BRIDGEWATER;
