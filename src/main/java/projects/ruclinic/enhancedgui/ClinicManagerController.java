@@ -4,27 +4,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.InputMethodEvent;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import projects.ruclinic.enhancedgui.ruclinic.Doctor;
-import projects.ruclinic.enhancedgui.ruclinic.Provider;
-import projects.ruclinic.enhancedgui.ruclinic.Radiology;
-import projects.ruclinic.enhancedgui.ruclinic.Technician;
-import projects.ruclinic.enhancedgui.util.List;
-import projects.ruclinic.enhancedgui.util.Sort;
+import projects.ruclinic.enhancedgui.ruclinic.*;
+import projects.ruclinic.enhancedgui.util.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-import projects.ruclinic.enhancedgui.ruclinic.Appointment;
-import projects.ruclinic.enhancedgui.ruclinic.Patient;
+
 import projects.ruclinic.enhancedgui.ruclinic.Provider;
 import projects.ruclinic.enhancedgui.ruclinic.Technician;
 import projects.ruclinic.enhancedgui.ruclinic.Doctor;
@@ -52,16 +42,16 @@ public class ClinicManagerController {
     private Button bt_schedule;
 
     @FXML
-    private ComboBox<String> cb_imaging;
+    private ComboBox<Radiology> cb_imaging;
 
     @FXML
-    private ComboBox<String> cb_provider;
+    private ComboBox<Doctor> cb_doctor;
 
     @FXML
     private ComboBox<String> cb_sortSelecter;
 
     @FXML
-    private ComboBox<String> cb_timeslot;
+    private ComboBox<Timeslot> cb_timeslot;
 
     @FXML
     private DatePicker dp_appdate;
@@ -70,7 +60,10 @@ public class ClinicManagerController {
     private DatePicker dp_dob;
 
     @FXML
-    private RadioButton rb_apptype;
+    private RadioButton rb_office;
+
+    @FXML
+    private RadioButton rb_imaging;
 
     @FXML
     private TextArea ta_output;
@@ -111,10 +104,14 @@ public class ClinicManagerController {
     @FXML
     private Text txt_patientlname;
 
+    @FXML
+    private ToggleGroup rb_apptype;
+
     private List<Provider> providersList;
     private List<Technician> technicianList;
     private List<Appointment> appointmentList;
     private List<Patient> patientList;
+    private List<Timeslot> timeslotList;
     private int techListPtr;
 
     /**
@@ -125,8 +122,11 @@ public class ClinicManagerController {
         this.technicianList = new List<Technician>();
         this.appointmentList = new List<Appointment>();
         this.patientList = new List<Patient>();
+        this.timeslotList = new List<Timeslot>();
+        loadTimeslots();
         this.techListPtr = 0;
     }
+
     public void initialize() {
         cb_sortSelecter.getItems().addAll(
                 "Print by Appointment",
@@ -137,13 +137,18 @@ public class ClinicManagerController {
                 "Print by Imaging",
                 "Print Credit"
         );
-        cb_provider.setPromptText("(No Provider File Loaded)");
+
+        cb_doctor.setPromptText("(No Provider File Loaded)");
         cb_imaging.setPromptText("(No Provider File Loaded)");
-        cb_imaging.getItems().addAll(
-                "CAT Scan",
-                "Ultrasound",
-                "X-Ray"
-        );
+
+        for (int i = Timeslot.EARLIEST_TIMESLOT; i <= Timeslot.LATEST_TIMESLOT; i++) {
+            cb_timeslot.getItems().add(timeslotList.get(i));
+        }
+
+        rb_apptype = new ToggleGroup();
+        rb_office.setToggleGroup(rb_apptype);
+        rb_office.setSelected(true);
+        rb_imaging.setToggleGroup(rb_apptype);
     }
 
     @FXML
@@ -167,7 +172,7 @@ public class ClinicManagerController {
             case "Print by Patient":
                 printByPatient();
                 break;
-            case "Print by Location ":
+            case "Print by Location":
                 printByLocation();
                 break;
             case "Print Bill":
@@ -190,12 +195,14 @@ public class ClinicManagerController {
 
     @FXML
     void clearAppTab(ActionEvent event) {
-
-    }
-
-    @FXML
-    void disableImaging(InputMethodEvent event) {
-
+        tf_fname.clear();
+        tf_lname.clear();
+        dp_dob.getEditor().clear();
+        dp_appdate.getEditor().clear();
+        cb_timeslot.getSelectionModel().clearSelection();
+        cb_doctor.getSelectionModel().clearSelection();
+        cb_imaging.getSelectionModel().clearSelection();
+        ta_output.clear();
     }
 
     @FXML
@@ -237,6 +244,8 @@ public class ClinicManagerController {
             if (providersFile != null) {
                 Scanner scan = new Scanner(providersFile);
                 String input = "";
+                this.providersList = new List<>();
+                this.technicianList = new List<>();
 
                 while (scan.hasNextLine()) {
                     input = scan.nextLine();
@@ -246,16 +255,28 @@ public class ClinicManagerController {
 
                 Sort.provider(providersList);
                 for (Provider p : providersList) {
-                    if (p instanceof Doctor)
-                        cb_provider.getItems().add(p.toString());
+                    if (p instanceof Doctor doctor)
+                        cb_doctor.getItems().add(doctor);
                 }
-                cb_provider.setPromptText("(Select a Provider)");
+
+                ObservableList<Radiology> radiology =
+                        FXCollections.observableArrayList(Radiology.values());
+                cb_imaging.setItems(radiology);
+
+                cb_doctor.setPromptText("(Select a Provider)");
                 cb_imaging.setPromptText("(Select an Imaging Service)");
                 scan.close();
             }
         }
         catch (FileNotFoundException e) {
-            System.out.println("File could not be found.");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("FileNotFoundException");
+            alert.setHeaderText(null);
+            alert.setContentText("File could not be found.");
+            alert.setResizable(true);
+            alert.getDialogPane().setPrefSize(480, 150);
+
+            alert.showAndWait();
         }
     }
 
@@ -266,13 +287,30 @@ public class ClinicManagerController {
 
     @FXML
     void scheduleApp(ActionEvent event) {
+        String missing = checkMissingData();
+        if (!missing.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Missing Information");
+            alert.setHeaderText(null);
+            alert.setContentText(missing);
+            alert.setResizable(true);
+            alert.getDialogPane().setPrefSize(480, 150);
 
+            alert.showAndWait();
+        }
+        else {
+            if (rb_apptype.getSelectedToggle().equals(rb_office)) {
+                String[] tokens = {"D", dp_appdate.getValue().toString(), Integer.toString(cb_timeslot.getSelectionModel().getSelectedIndex() + 1),
+                        tf_fname.toString(), tf_lname.toString(), dp_dob.getValue().toString(), cb_doctor.getValue().getNpi().toString()};
+                scheduleDoc(tokens);
+            }
+        }
     }
 
     @FXML
     public void setOffice(ActionEvent event) {
         txt_appprovider.setOpacity(1.0);
-        cb_provider.setDisable(false);
+        cb_doctor.setDisable(false);
         txt_appimaging.setOpacity(0.25);
         cb_imaging.setDisable(true);
     }
@@ -280,7 +318,7 @@ public class ClinicManagerController {
     @FXML
     public void setImaging(ActionEvent event) {
         txt_appprovider.setOpacity(0.25);
-        cb_provider.setDisable(true);
+        cb_doctor.setDisable(true);
         txt_appimaging.setOpacity(1.0);
         cb_imaging.setDisable(false);
     }
@@ -339,7 +377,7 @@ public class ClinicManagerController {
             return;
         }
         Sort.patient(patientList);
-        System.out.println("** Billing statement ordered by patient. **");
+        TA_printInfo.appendText("** Billing statement ordered by patient. **");
         for (int index = 0; index < this.patientList.size(); index++) {
             TA_printInfo.appendText("(" + (index + 1) + ") " + this.patientList.get(index).toString()+"/n");
         }
@@ -464,5 +502,298 @@ public class ClinicManagerController {
         }
 
         technicianList.set(0, newTechnician);
+    }
+
+    /**
+     * Helper method to schedule an appointment with a doctor.
+     *
+     * @param tokens array of details to schedule an appointment with a doctor, including doctor's npi
+     */
+    private void scheduleDoc(String[] tokens) {
+        if (isAppDatesTimeValid(tokens)) {
+            ta_output.clear();
+            Date appDate = new Date(tokens[1]);
+            Timeslot timeslot = new Timeslot(Integer.parseInt(tokens[2]));
+            Profile profile = new Profile(tokens[3], tokens[4], new Date(tokens[5]));
+            Patient patient = new Patient(profile);
+            Doctor provider = new Doctor();
+            if (this.appointmentList.contains(new Appointment(appDate, timeslot, patient, provider))) {
+                ta_output.setText(patient.getProfile().toString() + " has an existing appointment at the same time slot.");
+            } else if (!checkDigits(tokens[6])) {
+                ta_output.setText(tokens[6] + " - provider does not exist.");
+            } else {
+                provider = findDoctor(tokens[6]);
+
+                if (provider == null) {
+                    ta_output.setText(tokens[6] + " - provider does not exist.");
+                } else if (!isProviderAvailable(provider, appDate, timeslot)) {
+                    ta_output.setText(provider.toString() + " is not available at slot " + tokens[2] + ".");
+                } else {
+                    Patient newPatient = findPatient(patient);
+                    Appointment newApp = new Appointment(appDate, timeslot, newPatient, provider);
+                    appointmentList.add(newApp);
+                    newPatient.addVisit(newApp);
+                    ta_output.setText(newApp.toString() + " booked.");
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks if there are a valid number of tokens in the command and if the dates and times are valid.
+     *
+     * @param tokens array of details to schedule an appointment with a doctor, including doctor's npi
+     * @return true if there are a valid number of tokens in the command and if the dates and times are valid, return false otherwise
+     */
+    private boolean isAppDatesTimeValid(String[] tokens) {
+        if (!checkDateDigits(tokens[1], "appointment") || !isAppDateValid(tokens[1])) {
+            return false;
+        } else if (!checkDigits(tokens[2]) || !isTimeslotValid(tokens[2])) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Invalid Input");
+            alert.setHeaderText(null);
+            alert.setContentText(tokens[2] + " is not a valid time slot.");
+            alert.setResizable(true);
+            alert.getDialogPane().setPrefSize(480, 150);
+            alert.showAndWait();
+            return false;
+        } else if (!checkDateDigits(tokens[1], "dob") || !isDobValid(tokens[5])) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if inputted String contains only numerical characters.
+     *
+     * @param s String to be checked
+     * @return true if String contains only numerical characters, false if String does not
+     */
+    private boolean checkDigits(String s) {
+        for (Character c : s.toCharArray()) {
+            if (!Character.isDigit(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Checks if doctor can be found in the list of providers according to the npi value.
+     *
+     * @param npi npi value to be matched against each doctor in the list of providers
+     * @return Doctor object if found in list of providers, otherwise return null
+     */
+    private Doctor findDoctor(String npi) {
+        for (Provider p : providersList) {
+            if (p instanceof Doctor) {
+                Doctor d = (Doctor) p;
+                if (d.getNpi().equals(npi))
+                    return d;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Checks if provider is available at the specific date and timeslot.
+     *
+     * @param provider provider to check availability for
+     * @param date     date to check for provider's availability
+     * @param timeslot timeslot corresponding to date to check for provider's availability
+     * @return true if provider is available, false if provider is not available
+     */
+    private boolean isProviderAvailable(Provider provider, Date date, Timeslot timeslot) {
+        for (Appointment a : appointmentList) {
+            if (a.getProvider().equals(provider) && a.getDate().equals(date) &&
+                    a.getTimeslot().equals(timeslot)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Finds patient in list of Patients and creates a new Patient if not found
+     *
+     * @param patient Patient object to be searched for in list of Patients
+     * @return Patient from list of Patients or newly created Patient added to list of Patients
+     */
+    private Patient findPatient(Patient patient) {
+        for (Patient p : patientList) {
+            if (p.getProfile().equals(patient.getProfile())) {
+                return p;
+            }
+        }
+        patientList.add(patient);
+        return patient;
+    }
+
+    /**
+     * Check if an intended Date object contains only numerical characters.
+     *
+     * @param s String version of date to be checked.
+     * @return true if the intended Date object contains only numerical characters disregarding the '/'s, false otherwise
+     */
+    private boolean checkDateDigits(String s, String use) {
+        String[] dateVals = s.split("/");
+
+        for (String d : dateVals) {
+            if (!checkDigits(d)) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Invalid Input");
+                alert.setHeaderText(null);
+
+                String error = "";
+                if (use.equals("appointment")) {
+                    error = error + "Appointment date: ";
+                } else {
+                    error = error + "Patient dob: ";
+                }
+                error = error + s + " is not a valid calendar date";
+
+                alert.setContentText(error);
+                alert.setResizable(true);
+                alert.getDialogPane().setPrefSize(480, 150);
+                alert.showAndWait();
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Helper method to check if appointment date is valid.
+     *
+     * @param date appointment date to be checked
+     * @return true if appointment date is valid, false if appointment date is invalid
+     */
+    private boolean isAppDateValid(String date) {
+        Date appDate = new Date(date);
+
+        String error = "";
+        if (!appDate.isValid()) {
+            error = error.concat("Appointment date: " + date + " is not a valid calendar date");
+        } else if (appDate.isToday() || appDate.isPast()) {
+            error = error.concat("Appointment date: " + date + " is today or a date before today.");
+        } else if (appDate.isWeekend()) {
+            error = error.concat("Appointment date: " + date + " is Saturday or Sunday.");
+        } else if (!appDate.isInSixMonths()) {
+            error = error.concat("Appointment date: " + date + " is not within six months.");
+        }
+
+        if (!error.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Invalid Input");
+            alert.setHeaderText(null);
+            alert.setContentText(error);
+            alert.setResizable(true);
+            alert.getDialogPane().setPrefSize(480, 150);
+            alert.showAndWait();
+        }
+
+        return appDate.isValid() && !appDate.isToday() &&
+                !appDate.isPast() && !appDate.isWeekend() && appDate.isInSixMonths();
+    }
+
+    /**
+     * Helper method to check if time slot is valid.
+     *
+     * @param timeslot timeslot to be checked
+     * @return true if timeslot is valid, false if timeslot is invalid
+     */
+    private boolean isTimeslotValid(String timeslot) {
+        return Integer.parseInt(timeslot) >= Timeslot.EARLIEST_TIMESLOT &&
+                Integer.parseInt(timeslot) <= Timeslot.LATEST_TIMESLOT;
+    }
+
+    /**
+     * Helper method to check if date of birth is valid.
+     *
+     * @param date date of birth to be checked
+     * @return true if date of birth is valid, false if date of birth is invalid
+     */
+    private boolean isDobValid(String date) {
+        Date dob = new Date(date);
+
+        String error = "";
+        if (!dob.isValid()) {
+            error = error.concat("Patient dob: " + date + " is not a valid calendar date");
+        } else if (dob.isToday() || dob.isFuture()) {
+            error = error.concat("Patient dob: " + date + " is today or a day after today.");
+        }
+        if (!error.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Invalid Input");
+            alert.setHeaderText(null);
+            alert.setContentText(error);
+            alert.setResizable(true);
+            alert.getDialogPane().setPrefSize(480, 150);
+            alert.showAndWait();
+        }
+        return dob.isValid() && !dob.isToday() && !dob.isFuture();
+    }
+
+    /**
+     * Checks if any data in the update appointments tab is empty.
+     * @return String with alert message to input any missing data
+     */
+    private String checkMissingData() {
+        String missing = "";
+        int missingCount = 0;
+        if (tf_fname.getText().isEmpty()) {
+            missing = missing + ", first name of the patient";
+            missingCount++;
+        }
+        if (tf_lname.getText().isEmpty()) {
+            missing = missing + ", last name of the patient";
+            missingCount++;
+        }
+        if (dp_dob.getValue() == null) {
+            missing = missing + ", date of birth of the patient";
+            missingCount++;
+        }
+        if (dp_appdate.getValue() == null) {
+            missing = missing + ", date of the appointment";
+            missingCount++;
+        }
+        if (cb_timeslot.getValue() == null) {
+            missing = missing + ", time slot of the appointment";
+            missingCount++;
+        }
+        if (rb_apptype.getSelectedToggle().equals(rb_office) && cb_doctor.getValue() == null) {
+            missing = missing + ", provider of the appointment";
+            missingCount++;
+        }
+        if (rb_apptype.getSelectedToggle().equals(rb_imaging) && cb_imaging.getValue() == null) {
+            missing = missing + ", imaging type of the appointment";
+            missingCount++;
+        }
+
+        if (missingCount == 1) {
+            missing = "The " + missing.substring(2) + " needs to be inputted.";
+        }
+        else if (missingCount == 2) {
+            missing = "The " + missing.substring(2, missing.lastIndexOf(",")) + " and " +
+                    missing.substring(missing.lastIndexOf(",") + 2) + " need to be inputted.";
+        }
+        else if (missingCount > 1) {
+            missing = "The " + missing.substring(2, missing.lastIndexOf(",")) + ", and " +
+                    missing.substring(missing.lastIndexOf(",") + 2) + " need to be inputted.";
+        }
+
+        return missing;
+    }
+
+    /**
+     * Loads in the appointment time slots to the timeslotList
+     */
+    private void loadTimeslots() {
+        for (int i = Timeslot.EARLIEST_TIMESLOT; i <= Timeslot.LATEST_TIMESLOT; i++) {
+            this.timeslotList.add(new Timeslot(i));
+        }
     }
 }
