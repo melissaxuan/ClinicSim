@@ -1,5 +1,6 @@
 package projects.ruclinic.enhancedgui;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,6 +11,8 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
 import javafx.scene.input.InputMethodEvent;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -30,6 +33,7 @@ import projects.ruclinic.enhancedgui.ruclinic.Technician;
 import projects.ruclinic.enhancedgui.ruclinic.Doctor;
 import projects.ruclinic.enhancedgui.util.List;
 import projects.ruclinic.enhancedgui.util.Sort;
+import projects.ruclinic.enhancedgui.ruclinic.Location;
 
 public class ClinicManagerController {
 
@@ -62,6 +66,9 @@ public class ClinicManagerController {
 
     @FXML
     private ComboBox<String> cb_timeslot;
+
+    @FXML
+    private ComboBox<String> cb_printData;
 
     @FXML
     private DatePicker dp_appdate;
@@ -111,6 +118,18 @@ public class ClinicManagerController {
     @FXML
     private Text txt_patientlname;
 
+    @FXML
+    private TableView<Location> tv_printLocation;
+
+    @FXML
+    private TableColumn<Location,String> tc_col1;
+
+    @FXML
+    private TableColumn<Location, String> tc_col2;
+
+    @FXML
+    private TableColumn<Location, String> tc_col3;
+
     private List<Provider> providersList;
     private List<Technician> technicianList;
     private List<Appointment> appointmentList;
@@ -137,6 +156,7 @@ public class ClinicManagerController {
                 "Print by Imaging",
                 "Print Credit"
         );
+
         cb_provider.setPromptText("(No Provider File Loaded)");
         cb_imaging.setPromptText("(No Provider File Loaded)");
         cb_imaging.getItems().addAll(
@@ -144,6 +164,10 @@ public class ClinicManagerController {
                 "Ultrasound",
                 "X-Ray"
         );
+        tc_col1.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLocName()));
+        tc_col2.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCounty()));
+        tc_col3.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getZip()));
+        tv_printLocation.setItems(FXCollections.observableArrayList(Location.values()));
     }
 
     @FXML
@@ -167,7 +191,7 @@ public class ClinicManagerController {
             case "Print by Patient":
                 printByPatient();
                 break;
-            case "Print by Location ":
+            case "Print by Location":
                 printByLocation();
                 break;
             case "Print Bill":
@@ -465,4 +489,6 @@ public class ClinicManagerController {
 
         technicianList.set(0, newTechnician);
     }
+
+
 }
