@@ -31,9 +31,9 @@ public class Date implements Comparable<Date>
     public Date(String date)
     {
         String[] dateFormat = date.split("/");
-        this.month = Integer.parseInt(dateFormat[1]);
-        this.day = Integer.parseInt(dateFormat[2]);
-        this.year = Integer.parseInt(dateFormat[0]);
+        this.month = Integer.parseInt(dateFormat[0]);
+        this.day = Integer.parseInt(dateFormat[1]);
+        this.year = Integer.parseInt(dateFormat[2]);
     }
 
     /**
@@ -117,6 +117,7 @@ public class Date implements Comparable<Date>
      */
     public boolean isValid()
     {
+        System.out.println(this.toString());
         int submonth = this.month -1;
 
         if(submonth <Calendar.JANUARY|| submonth >Calendar.DECEMBER)

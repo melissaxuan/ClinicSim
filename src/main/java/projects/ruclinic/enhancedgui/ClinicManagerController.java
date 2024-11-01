@@ -328,14 +328,14 @@ public class ClinicManagerController {
             if (tg_apptype.getSelectedToggle().equals(rb_office)) {
                 String[] tokens = {"D", convertDate(dp_appdate.getValue()),
                         Integer.toString(cb_timeslot.getSelectionModel().getSelectedIndex() + 1),
-                        tf_fname.toString(), tf_lname.toString(), convertDate(dp_dob.getValue()),
+                        tf_fname.getText(), tf_lname.getText(), convertDate(dp_dob.getValue()),
                         cb_doctor.getValue().getNpi()};
                 scheduleDoc(tokens);
             }
             else {
                 String[] tokens = {"T", convertDate(dp_appdate.getValue()),
                         Integer.toString(cb_timeslot.getSelectionModel().getSelectedIndex() + 1),
-                        tf_fname.toString(), tf_lname.toString(), convertDate(dp_dob.getValue()),
+                        tf_fname.getText(), tf_lname.getText(), convertDate(dp_dob.getValue()),
                         cb_imaging.getValue().toString()};
                 scheduleTech(tokens);
             }
@@ -412,9 +412,9 @@ public class ClinicManagerController {
             return;
         }
         Sort.patient(patientList);
-        TA_printInfo.appendText("** Billing statement ordered by patient. **");
+        TA_printInfo.appendText("** Billing statement ordered by patient. **\n");
         for (int index = 0; index < this.patientList.size(); index++) {
-            TA_printInfo.appendText("(" + (index + 1) + ") " + this.patientList.get(index).toString()+"/n");
+            TA_printInfo.appendText("(" + (index + 1) + ") " + this.patientList.get(index).toString()+"\n");
         }
 
         TA_printInfo.appendText("** end of list **");
@@ -463,11 +463,11 @@ public class ClinicManagerController {
         }
         return doctorAppointments;
     }
-    /**
-     //     * Helper method to sort out technician appointments from within the List of all Appointments.
-     //     *
-     //     * @return List of Appointments with Technician providers.
-     //     */
+        /**
+          * Helper method to sort out technician appointments from within the List of all Appointments.
+          *
+          * @return List of Appointments with Technician providers.
+          */
     private List<Appointment> findTechAppointments() {
         List<Appointment> techAppointments = new List<Appointment>();
         for (Appointment a : appointmentList) {
@@ -478,8 +478,8 @@ public class ClinicManagerController {
         return techAppointments;
     }
     /**
-     //     * Helper method that handles print credit for providers command: prints expected credit amounts for providers sorted by provider profile.
-     //     */
+    * Helper method that handles print credit for providers command: prints expected credit amounts for providers sorted by provider profile.
+    */
     private void printCredit() {
         Sort.provider(providersList);
         calculateCredit();
@@ -493,7 +493,7 @@ public class ClinicManagerController {
             TA_printInfo.appendText("Schedule calendar is empty.\n");
             return;
         }
-        TA_printInfo.appendText("** Credit amount ordered by provider. **");
+        TA_printInfo.appendText("** Credit amount ordered by provider.\n");
         int index = 1;
         for (Provider p : providersList) {
             int credit = 0;
@@ -580,12 +580,8 @@ public class ClinicManagerController {
      * @param tokens array of details to schedule an appointment with a technician, including specified imaging service
      */
     private void scheduleTech(String[] tokens) {
-        if (tokens.length != 7) {
-            System.out.println("Missing data tokens.");
-            return;
-        }
-
         if (isAppDatesTimeValid(tokens)) {
+            ta_output.clear();
             Date appDate = new Date(tokens[1]);
             Timeslot timeslot = new Timeslot(Integer.parseInt(tokens[2]));
             Profile profile = new Profile(tokens[3], tokens[4], new Date(tokens[5]));
@@ -593,20 +589,20 @@ public class ClinicManagerController {
             Technician provider = new Technician();
             String imaging = tokens[6];
             if (this.appointmentList.contains(new Appointment(appDate, timeslot, patient, provider))) {
-                System.out.println(patient.getProfile().toString() + " has an existing appointment at the same time slot.");
+                ta_output.setText(patient.getProfile().toString() + " has an existing appointment at the same time slot.");
             } else if (!checkImaging(imaging)) {
-                System.out.println(imaging + " - imaging service is not provided.");
+                ta_output.setText(imaging + " - imaging service is not provided.");
             } else {
                 Technician technician = findTechnician(appDate, timeslot, imaging);
                 if (technician == null) {
-                    System.out.println("Cannot find an available technician at all locations for " + imaging.toUpperCase() +
+                    ta_output.setText("Cannot find an available technician at all locations for " + imaging.toUpperCase() +
                             " at slot " + tokens[2] + ".");
                 } else {
                     Patient newPatient = findPatient(patient);
                     Imaging newApp = new Imaging(appDate, timeslot, newPatient, technician, imaging);
                     appointmentList.add(newApp);
                     newPatient.addVisit(newApp);
-                    System.out.println(newApp.toString() + " booked.");
+                    ta_output.setText(newApp.toString() + " booked.");
                 }
             }
         }
@@ -801,7 +797,7 @@ public class ClinicManagerController {
      * @return true if the intended Date object contains only numerical characters disregarding the '/'s, false otherwise
      */
     private boolean checkDateDigits(String s, String use) {
-        String[] dateVals = s.split("-");
+        String[] dateVals = s.split("/");
 
         for (String d : dateVals) {
             if (!checkDigits(d)) {
@@ -815,7 +811,7 @@ public class ClinicManagerController {
                 } else {
                     error = error + "Patient dob: ";
                 }
-                error = error + s + " is not a valid calendar date";
+                error = error + s + " is not a valid calendar date1";
 
                 alert.setContentText(error);
                 alert.setResizable(true);
@@ -840,7 +836,7 @@ public class ClinicManagerController {
 
         String error = "";
         if (!appDate.isValid()) {
-            error = error.concat("Appointment date: " + date + " is not a valid calendar date");
+            error = error.concat("Appointment date: " + date + " is not a valid calendar date2");
         } else if (appDate.isToday() || appDate.isPast()) {
             error = error.concat("Appointment date: " + date + " is today or a date before today.");
         } else if (appDate.isWeekend()) {
@@ -885,7 +881,7 @@ public class ClinicManagerController {
 
         String error = "";
         if (!dob.isValid()) {
-            error = error.concat("Patient dob: " + date + " is not a valid calendar date");
+            error = error.concat("Patient dob: " + date + " is not a valid calendar date3");
         } else if (dob.isToday() || dob.isFuture()) {
             error = error.concat("Patient dob: " + date + " is today or a day after today.");
         }
@@ -964,6 +960,8 @@ public class ClinicManagerController {
     private String convertDate(LocalDate date) {
         String d = date.toString();
         String[] dateFormat = d.split("-");
+//        System.out.println(date.toString());
+//        System.out.println(dateFormat[1] + "/" + dateFormat[2] + "/" + dateFormat[0]);
         return dateFormat[1] + "/" + dateFormat[2] + "/" + dateFormat[0];
     }
 }
