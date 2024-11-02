@@ -5,7 +5,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.InputMethodEvent;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import projects.ruclinic.enhancedgui.ruclinic.*;
@@ -47,6 +46,9 @@ public class ClinicManagerController {
 
     @FXML
     private ComboBox<Doctor> cb_doctor;
+
+    @FXML
+    private ComboBox<Timeslot> cb_newapptimeslot;
 
     @FXML
     private ComboBox<String> cb_sortSelecter;
@@ -94,6 +96,9 @@ public class ClinicManagerController {
     private Text txt_apptype;
 
     @FXML
+    private Text txt_newapptime;
+
+    @FXML
     private Text txt_patientdob;
 
     @FXML
@@ -128,6 +133,9 @@ public class ClinicManagerController {
         this.techListPtr = 0;
     }
 
+    /**
+     * Initializes components in gui
+     */
     public void initialize() {
         cb_sortSelecter.getItems().addAll(
                 "Print by Appointment",
@@ -145,11 +153,6 @@ public class ClinicManagerController {
         for (int i = Timeslot.EARLIEST_TIMESLOT; i <= Timeslot.LATEST_TIMESLOT; i++) {
             cb_timeslot.getItems().add(timeslotList.get(i - 1));
         }
-
-//        tg_apptype = new ToggleGroup();
-//        rb_office.setToggleGroup(tg_apptype);
-//        rb_office.setSelected(true);
-//        rb_imaging.setToggleGroup(tg_apptype);
     }
 
     @FXML
@@ -204,6 +207,9 @@ public class ClinicManagerController {
         cb_doctor.getSelectionModel().clearSelection();
         cb_imaging.getSelectionModel().clearSelection();
         ta_output.clear();
+        if (cb_newapptimeslot.getOpacity() == 1.0) {
+            cb_newapptimeslot.getSelectionModel().clearSelection();
+        }
     }
 
     @FXML
@@ -243,6 +249,9 @@ public class ClinicManagerController {
             fileChooser.setTitle("Open File");
             File providersFile = fileChooser.showOpenDialog(null);
             if (providersFile != null) {
+                if (!providersFile.getPath().endsWith(".txt")) {
+                    setupAlert("Incorrect File Type", "Providers file should be a .txt file.");
+                }
                 Scanner scan = new Scanner(providersFile);
                 String input = "";
                 this.providersList = new List<>();
@@ -270,59 +279,70 @@ public class ClinicManagerController {
             }
         }
         catch (FileNotFoundException e) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("FileNotFoundException");
-            alert.setHeaderText(null);
-            alert.setContentText("File could not be found.");
-            alert.setResizable(true);
-            alert.getDialogPane().setPrefSize(480, 150);
-
-            alert.showAndWait();
+            setupWarningAlert("FileNotFoundException", "File could not be found.");
         }
     }
 
     @FXML
     void rescheduleApp(ActionEvent event) {
-        String missing = checkMissingData();
+        String missing = checkMissingData(true);
         if (!missing.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Missing Information");
-            alert.setHeaderText(null);
-            alert.setContentText(missing);
-            alert.setResizable(true);
-            alert.getDialogPane().setPrefSize(480, 150);
-            alert.showAndWait();
+            setupAlert("Missing Information", missing);
         }
         else {
-            if (tg_apptype.getSelectedToggle().equals(rb_office)) {
-                String[] tokens = {"D", dp_appdate.getValue().toString(), Integer.toString(cb_timeslot.getSelectionModel().getSelectedIndex() + 1),
-                        tf_fname.toString(), tf_lname.toString(), dp_dob.getValue().toString(), cb_doctor.getValue().getNpi().toString()};
-//                scheduleDoc(tokens);
+            if (tg_apptype.getSelectedToggle().equals(rb_office) && txt_newapptime.getOpacity() == 0) {
+                ta_output.clear();
+                String[] tokens = {"R", convertDate(dp_appdate.getValue()),
+                        Integer.toString(cb_timeslot.getSelectionModel().getSelectedIndex() + 1),
+                        tf_fname.getText(), tf_lname.getText(), convertDate(dp_dob.getValue()),
+                        ""};
+                Date appDate = new Date(tokens[1]);
+                Timeslot timeslot = new Timeslot(Integer.parseInt(tokens[2]));
+                Profile profile = new Profile(tokens[3], tokens[4], new Date(tokens[5]));
+                Patient patient = new Patient(profile);
+                Provider provider = new Doctor();
+                Appointment newApp = new Imaging(appDate, timeslot, patient, provider, "XRAY");
+
+                if (!this.appointmentList.contains(newApp)) {
+                    ta_output.setText(newApp.getDate().toString() + " " + newApp.getTimeslot().toString() +
+                            " " + newApp.getPatient().getProfile().toString() + " does not exist.");
+                }
+                else {
+                    enableNewTime();
+                }
             }
             else {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Reschedule ALert");
-                alert.setHeaderText(null);
-                alert.setContentText("Appointments with Technicians can not be rescheduled.");
-                alert.setResizable(true);
-                alert.getDialogPane().setPrefSize(480, 150);
-                alert.showAndWait();
+                setupAlert("Reschedule Alert", "Appointments with Technicians cannot be rescheduled.");
             }
         }
     }
 
     @FXML
-    void scheduleApp(ActionEvent event) {
-        String missing = checkMissingData();
+    void rescheduleAppNewTime(ActionEvent event) {
+        String missing = checkMissingData(true);
         if (!missing.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Missing Information");
-            alert.setHeaderText(null);
-            alert.setContentText(missing);
-            alert.setResizable(true);
-            alert.getDialogPane().setPrefSize(480, 150);
+            setupAlert("Missing Information", missing);
+        }
+        else {
+            if (tg_apptype.getSelectedToggle().equals(rb_office)) {
+                String[] tokens = {"R", convertDate(dp_appdate.getValue()),
+                        Integer.toString(cb_timeslot.getSelectionModel().getSelectedIndex() + 1),
+                        tf_fname.getText().toString(), tf_lname.getText().toString(), convertDate(dp_dob.getValue()),
+                        Integer.toString(cb_newapptimeslot.getSelectionModel().getSelectedIndex() + 1)};
+                reschedule(tokens);
+            }
+            else {
+                setupAlert("Reschedule Alert", "Appointments with Technicians can not be rescheduled.");
+            }
+        }
+        disableNewTime();
+    }
 
-            alert.showAndWait();
+    @FXML
+    void scheduleApp(ActionEvent event) {
+        String missing = checkMissingData(false);
+        if (!missing.isEmpty()) {
+            setupAlert("Missing Information", missing);
         }
         else {
             if (tg_apptype.getSelectedToggle().equals(rb_office)) {
@@ -609,6 +629,48 @@ public class ClinicManagerController {
     }
 
     /**
+     * Helper method that handles reschedule command: reschedules appointment to different available timeslot on same day with same provider.
+     *
+     * @param tokens array of details to be used to reschedule an appointment
+     */
+    private void reschedule(String[] tokens) {
+        if (isAppDatesTimeValid(tokens) && isTimeslotValid(tokens[6])) {
+            ta_output.clear();
+            Date appDate = new Date(tokens[1]);
+            Timeslot timeslot = new Timeslot(Integer.parseInt(tokens[2]));
+            Profile profile = new Profile(tokens[3], tokens[4], new Date(tokens[5]));
+            Patient patient = new Patient(profile);
+            Provider provider = new Doctor();
+            Appointment newApp = new Imaging(appDate, timeslot, patient, provider, "XRAY");
+
+            if (!this.appointmentList.contains(newApp)) {
+                ta_output.setText(newApp.getDate().toString() + " " + newApp.getTimeslot().toString() +
+                        " " + newApp.getPatient().getProfile().toString() + " does not exist.");
+            } else {
+                Provider pr = findProvider(patient, appDate, timeslot);
+                if (pr == null) {
+                    ta_output.setText(newApp.getDate().toString() + " " + newApp.getTimeslot().toString() +
+                            " " + newApp.getPatient().getProfile().toString() + " does not exist.");
+                }
+                if (isTimeslotValid(tokens[6])) {
+                    Appointment appointment = findAppointment(newApp);
+                    if (appointment != null) {
+                        Timeslot newTimeslot = new Timeslot(Integer.parseInt(tokens[6]));
+                        newApp.setTimeslot(newTimeslot);
+                        if (this.appointmentList.contains(newApp)) {
+                            ta_output.setText(newApp.getPatient().getProfile() + " has an existing appointment at " +
+                                    newApp.getDate() + " " + newApp.getTimeslot());
+                        } else {
+                            appointment.setTimeslot(newTimeslot);
+                            ta_output.setText("Rescheduled to " + appointment.toString());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Checks if imaging service is a provided imaging service.
      *
      * @param imaging name of requested imaging service
@@ -631,13 +693,7 @@ public class ClinicManagerController {
         if (!checkDateDigits(tokens[1], "appointment") || !isAppDateValid(tokens[1])) {
             return false;
         } else if (!checkDigits(tokens[2]) || !isTimeslotValid(tokens[2])) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Invalid Input");
-            alert.setHeaderText(null);
-            alert.setContentText(tokens[2] + " is not a valid time slot.");
-            alert.setResizable(true);
-            alert.getDialogPane().setPrefSize(480, 150);
-            alert.showAndWait();
+            setupAlert("Invalid Input", tokens[2] + " is not a valid time slot.");
             return false;
         } else if (!checkDateDigits(tokens[1], "dob") || !isDobValid(tokens[5])) {
             return false;
@@ -705,6 +761,39 @@ public class ClinicManagerController {
             }
             counter++;
         }
+        return null;
+    }
+
+    /**
+     * Finds provider matching an appointment's patient, date, and time.
+     *
+     * @param patient  Patient that scheduled the appointment
+     * @param date     date of the appointment
+     * @param timeslot time slot of the appointment
+     * @return Provider object matching the appointment's patient, date, and time details, otherwise returns null
+     */
+    private Provider findProvider(Patient patient, Date date, Timeslot timeslot) {
+        for (Appointment a : appointmentList) {
+            if (a.getPatient().equals(patient) && a.getDate().equals(date) && a.getTimeslot().equals(timeslot)) {
+                return a.getProvider();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Checks if appointment can be found in the list of appointments
+     * @param app appointment to be searched for
+     * @return Appointment object if found in list of appointments, otherwise return null
+     */
+    private Appointment findAppointment(Appointment app) {
+        for (Appointment a : appointmentList) {
+            if (a.equals(app)) {
+                return a;
+            }
+        }
+
         return null;
     }
 
@@ -798,13 +887,8 @@ public class ClinicManagerController {
      */
     private boolean checkDateDigits(String s, String use) {
         String[] dateVals = s.split("/");
-
         for (String d : dateVals) {
             if (!checkDigits(d)) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Invalid Input");
-                alert.setHeaderText(null);
-
                 String error = "";
                 if (use.equals("appointment")) {
                     error = error + "Appointment date: ";
@@ -813,11 +897,7 @@ public class ClinicManagerController {
                 }
                 error = error + s + " is not a valid calendar date1";
 
-                alert.setContentText(error);
-                alert.setResizable(true);
-                alert.getDialogPane().setPrefSize(480, 150);
-                alert.showAndWait();
-
+                setupAlert("Invalid Input", error);
                 return false;
             }
         }
@@ -846,13 +926,7 @@ public class ClinicManagerController {
         }
 
         if (!error.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Invalid Input");
-            alert.setHeaderText(null);
-            alert.setContentText(error);
-            alert.setResizable(true);
-            alert.getDialogPane().setPrefSize(480, 150);
-            alert.showAndWait();
+            setupAlert("Invalid Input", error);
         }
 
         return appDate.isValid() && !appDate.isToday() &&
@@ -886,13 +960,7 @@ public class ClinicManagerController {
             error = error.concat("Patient dob: " + date + " is today or a day after today.");
         }
         if (!error.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Invalid Input");
-            alert.setHeaderText(null);
-            alert.setContentText(error);
-            alert.setResizable(true);
-            alert.getDialogPane().setPrefSize(480, 150);
-            alert.showAndWait();
+            setupAlert("Invalid Input", error);
         }
         return dob.isValid() && !dob.isToday() && !dob.isFuture();
     }
@@ -901,7 +969,7 @@ public class ClinicManagerController {
      * Checks if any data in the update appointments tab is empty.
      * @return String with alert message to input any missing data
      */
-    private String checkMissingData() {
+    private String checkMissingData(boolean reschedule) {
         String missing = "";
         int missingCount = 0;
         if (tf_fname.getText().isEmpty()) {
@@ -924,12 +992,16 @@ public class ClinicManagerController {
             missing = missing + ", time slot of the appointment";
             missingCount++;
         }
-        if (tg_apptype.getSelectedToggle().equals(rb_office) && cb_doctor.getValue() == null) {
+        if (!reschedule && tg_apptype.getSelectedToggle().equals(rb_office) && cb_doctor.getValue() == null) {
             missing = missing + ", provider of the appointment";
             missingCount++;
         }
-        if (tg_apptype.getSelectedToggle().equals(rb_imaging) && cb_imaging.getValue() == null) {
+        if (!reschedule && tg_apptype.getSelectedToggle().equals(rb_imaging) && cb_imaging.getValue() == null) {
             missing = missing + ", imaging type of the appointment";
+            missingCount++;
+        }
+        if (txt_newapptime.getOpacity() == 1.0 && cb_newapptimeslot.getValue() == null) {
+            missing = missing + ", new time slot of the appointment";
             missingCount++;
         }
 
@@ -957,11 +1029,69 @@ public class ClinicManagerController {
         }
     }
 
+    /**
+     * Convert LocalDate date to String date in format MM/DD/YYYY
+     * @param date LocalDate date in format YYYY-MM-DD
+     * @return String date in format MM/DD/YYYY
+     */
     private String convertDate(LocalDate date) {
         String d = date.toString();
         String[] dateFormat = d.split("-");
 //        System.out.println(date.toString());
 //        System.out.println(dateFormat[1] + "/" + dateFormat[2] + "/" + dateFormat[0]);
         return dateFormat[1] + "/" + dateFormat[2] + "/" + dateFormat[0];
+    }
+
+    /**
+     * Enable new time combo box
+     */
+    private void enableNewTime() {
+        for (int i = Timeslot.EARLIEST_TIMESLOT; i <= Timeslot.LATEST_TIMESLOT; i++) {
+            cb_newapptimeslot.getItems().add(timeslotList.get(i - 1));
+        }
+        cb_newapptimeslot.setOpacity(1.0);
+        txt_newapptime.setOpacity(1.0);
+        cb_newapptimeslot.setDisable(false);
+    }
+
+    /**
+     * Disable new time combo box
+     */
+    private void disableNewTime() {
+        cb_newapptimeslot.setOpacity(0.0);
+        txt_newapptime.setOpacity(0.0);
+        cb_newapptimeslot.setDisable(true);
+    }
+
+    /**
+     * Set up alert box with title and message
+     * @param title title of alert box
+     * @param text message for alert box
+     */
+    private void setupAlert(String title, String text) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(text);
+        alert.setResizable(true);
+        alert.getDialogPane().setPrefSize(480, 150);
+
+        alert.showAndWait();
+    }
+
+    /**
+     * Set up alert box with title and warning message
+     * @param title title of alert box
+     * @param text warning message for alert box
+     */
+    private void setupWarningAlert(String title, String text) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(text);
+        alert.setResizable(true);
+        alert.getDialogPane().setPrefSize(480, 150);
+
+        alert.showAndWait();
     }
 }
