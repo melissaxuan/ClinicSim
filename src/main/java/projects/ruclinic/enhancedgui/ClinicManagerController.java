@@ -1,14 +1,17 @@
 package projects.ruclinic.enhancedgui;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.InputMethodEvent;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import projects.ruclinic.enhancedgui.ruclinic.*;
-import projects.ruclinic.enhancedgui.util.*;
+import projects.ruclinic.enhancedgui.util.List;
+import projects.ruclinic.enhancedgui.util.Sort;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -55,6 +58,12 @@ public class ClinicManagerController {
 
     @FXML
     private ComboBox<Timeslot> cb_timeslot;
+
+    @FXML
+    private ComboBox<String> cb_printData;
+
+    @FXML
+    private ComboBox<String> cb_tablePrint;
 
     @FXML
     private DatePicker dp_appdate;
@@ -113,6 +122,35 @@ public class ClinicManagerController {
     @FXML
     private ToggleGroup tg_apptype;
 
+    @FXML
+    private TableView<Location> tv_printLocation;
+
+    @FXML
+    private TableColumn<Location,String> tc_col1;
+
+    @FXML
+    private TableColumn<Location, String> tc_col2;
+
+    @FXML
+    private TableColumn<Location, String> tc_col3;
+
+    @FXML
+    private TableView<Specialty> tv_printSpecialty;
+
+    @FXML
+    private TableColumn<Specialty,String> tc_col4;
+
+    @FXML
+    private TableColumn<Specialty, String> tc_col5;
+
+    @FXML
+    private TableView<Radiology> tv_printRadiology;
+
+    @FXML
+    private TableColumn<Radiology,String> tc_col6;
+
+
+
     private List<Provider> providersList;
     private List<Technician> technicianList;
     private List<Appointment> appointmentList;
@@ -148,11 +186,30 @@ public class ClinicManagerController {
         );
 
         cb_doctor.setPromptText("(No Provider File Loaded)");
+        cb_tablePrint.getItems().addAll(
+                "Print Locations",
+                "Print Specialties",
+                "Print Radiology Choices"
+        );
+
+        cb_doctor.setPromptText("(No Provider File Loaded)");
         cb_imaging.setPromptText("(No Provider File Loaded)");
 
         for (int i = Timeslot.EARLIEST_TIMESLOT; i <= Timeslot.LATEST_TIMESLOT; i++) {
             cb_timeslot.getItems().add(timeslotList.get(i - 1));
         }
+
+        tc_col1.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLocName()));
+        tc_col2.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCounty()));
+        tc_col3.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getZip()));
+        tv_printLocation.setItems(FXCollections.observableArrayList(Location.values()));
+
+        tc_col4.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSpecName()));
+        tc_col5.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf((cellData.getValue().getCharge()))));
+        tv_printSpecialty.setItems(FXCollections.observableArrayList(Specialty.values()));
+
+        tc_col6.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRadName()));
+        tv_printRadiology.setItems(FXCollections.observableArrayList(Radiology.values()));
     }
 
     @FXML
@@ -203,6 +260,40 @@ public class ClinicManagerController {
             default:
                 break;
        }
+
+    }
+    /**
+     * Method to convert the event to a string and show the correct table
+     * @param event The type of table to be visible
+     */
+    @FXML
+    void cb_tablePrint(ActionEvent event){
+        ComboBox<String> comboBox = (ComboBox<String>) event.getSource();
+        String tablePrint = comboBox.getValue();
+        tv_printLocation.setVisible(false);
+        tv_printSpecialty.setVisible(false);
+        tv_printRadiology.setVisible(false);
+        switch(tablePrint)
+        {
+            case  "Print Locations":
+                tv_printLocation.setVisible(true);
+                break;
+            case "Print Specialties":
+                tv_printSpecialty.setVisible(true);
+                break;
+            case "Print Radiology Choices":
+                tv_printRadiology.setVisible(true);
+                break;
+            default:
+                break;
+        }
+    }
+
+
+    /**
+     * Helper method to print the locations to the table view
+     */
+    private void printTableLocations() {
 
     }
 
@@ -435,7 +526,8 @@ public class ClinicManagerController {
         TA_printInfo.appendText("** List of appointments, ordered by county/date/time. \n");
         printAppointmentList(this.appointmentList);
     }
-       /**
+
+    /**
        * Helper method that handles print bill statements command: prints bills sorted by patient profile.
      */
     private void printBill() {
@@ -455,7 +547,8 @@ public class ClinicManagerController {
         this.appointmentList = new List<Appointment>();
         this.techListPtr = 0;
     }
-        /**
+
+    /**
      * Helper method that handles print by office command: prints office (doctor) appointments sorted by county name, then date and time.
      */
     private void printByOffice() {
@@ -468,7 +561,8 @@ public class ClinicManagerController {
         TA_printInfo.appendText("** List of office appointments ordered by county/date/time.\n");
         printAppointmentList(docAppList);
     }
-        /**
+
+    /**
      * Helper method that handles print by imaging command: prints imaging appointments sorted by county name, then date and time.
      */
     private void printByImaging() {
@@ -481,11 +575,11 @@ public class ClinicManagerController {
         TA_printInfo.appendText("** List of radiology appointments ordered by county/date/time.\n");
         printAppointmentList(techAppList);
    }
+
     /**
-     //     * Helper method to sort out doctor appointments from within the List of all Appointments.
-     //     *
-     //     * @return List of Appointments with Doctor providers.
-     //     */
+     * Helper method to sort out doctor appointments from within the List of all Appointments.
+     * @return List of Appointments with Doctor providers.
+     */
     private List<Appointment> findDocAppointments() {
         List<Appointment> doctorAppointments = new List<Appointment>();
         for (Appointment a : appointmentList) {
@@ -495,11 +589,12 @@ public class ClinicManagerController {
         }
         return doctorAppointments;
     }
-        /**
-          * Helper method to sort out technician appointments from within the List of all Appointments.
-          *
-          * @return List of Appointments with Technician providers.
-          */
+
+    /**
+      * Helper method to sort out technician appointments from within the List of all Appointments.
+      *
+      * @return List of Appointments with Technician providers.
+      */
     private List<Appointment> findTechAppointments() {
         List<Appointment> techAppointments = new List<Appointment>();
         for (Appointment a : appointmentList) {
@@ -509,9 +604,10 @@ public class ClinicManagerController {
         }
         return techAppointments;
     }
+
     /**
-    * Helper method that handles print credit for providers command: prints expected credit amounts for providers sorted by provider profile.
-    */
+     * Helper method that handles print credit for providers command: prints expected credit amounts for providers sorted by provider profile.
+     */
     private void printCredit() {
         Sort.provider(providersList);
         calculateCredit();

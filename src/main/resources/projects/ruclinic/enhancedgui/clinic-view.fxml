@@ -30,7 +30,7 @@
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="399.0" prefWidth="344.0">
             <children>
-              <TextArea id="ta_homeinfo" blendMode="MULTIPLY" layoutX="11.0" layoutY="10.0" prefHeight="450.0" prefWidth="322.0" text="** Included Features **&#10;&#10;Update Appointments: &#10;- Schedule Doctor Appointment&#10;- Schedule Technician Appointment&#10;- Reschedule Appointment&#10;- Cancel Appointment&#10;- Clear Appointment Details&#10;&#10;Print Info:&#10;- Appointment List Sorted By Appointments&#10;- Appointment List Sorted By Patients&#10;- Appointment List Sorted By Locations&#10;- List of Office Appointments&#10;- List of Imaging Appointments&#10;- List of Billing Statements&#10;- List of Expected Credits for Providers&#10;&#10;Print Data:&#10;- List of Doctors&#10;- List of Technicians&#10;- List of Locations&#10;- List of Timeslots&#10;- List of Radiology Types">
+              <TextArea id="ta_homeinfo" blendMode="MULTIPLY" layoutX="11.0" layoutY="10.0" prefHeight="450.0" prefWidth="322.0" text="** Included Features **&#10;&#10;Update Appointments: &#10;- Schedule Doctor Appointment&#10;- Schedule Technician Appointment&#10;- Reschedule Appointment&#10;- Cancel Appointment&#10;- Clear Appointment Details&#10;&#10;Print Info:&#10;- Appointment List Sorted By Appointments&#10;- Appointment List Sorted By Patients&#10;- Appointment List Sorted By Locations&#10;- List of Office Appointments&#10;- List of Imaging Appointments&#10;- List of Billing Statements&#10;- List of Expected Credits for Providers&#10;&#10;Print Data:&#10;- List of Locations&#10;- List of Timeslots&#10;- List of Radiology Types">
                 <font>
                   <Font name="Roboto Light" size="12.0" />
                 </font></TextArea>
@@ -166,9 +166,6 @@
                     <padding>
                       <Insets left="20.0" right="20.0" top="15.0" />
                     </padding>
-                              <VBox.margin>
-                                 <Insets />
-                              </VBox.margin>
                   </GridPane>
                            <GridPane>
                               <columnConstraints>
@@ -215,12 +212,26 @@
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="271.0" prefWidth="200.0">
             <children>
-              <TableView prefHeight="200.0" prefWidth="200.0">
+              <TableView id="tv_printLocation" fx:id="tv_printLocation" prefHeight="308.0" prefWidth="344.0" visible="false">
                 <columns>
-                  <TableColumn prefWidth="75.0" text="C1" />
-                  <TableColumn prefWidth="75.0" text="C2" />
+                  <TableColumn id="tc_col1" fx:id="tc_col1" prefWidth="75.0" text="City" />
+                  <TableColumn id="tc_col2" fx:id="tc_col2" prefWidth="75.0" text="County" />
+                           <TableColumn id="tc_col3" fx:id="tc_col3" prefWidth="75.0" text="ZIP" />
                 </columns>
               </TableView>
+                     <ComboBox fx:id="cb_tablePrint" layoutX="14.0" layoutY="354.0" onAction="#cb_tablePrint" prefWidth="150.0" promptText="(Select Table)" />
+                     <Label layoutX="7.0" layoutY="328.0" text="SELECT THE VALUES FOR THE TABLE TO PRINT:" />
+                     <TableView id="tv_printLocation" fx:id="tv_printSpecialty" layoutX="-2.0" layoutY="-3.0" prefHeight="321.0" prefWidth="356.0" visible="false">
+                        <columns>
+                           <TableColumn id="tc_col1" fx:id="tc_col4" prefWidth="75.0" text="Specialty" />
+                           <TableColumn id="tc_col2" fx:id="tc_col5" prefWidth="75.0" text="Charge" />
+                        </columns>
+                     </TableView>
+                     <TableView id="tv_printLocation" fx:id="tv_printRadiology" layoutX="-1.0" prefHeight="311.0" prefWidth="344.0" visible="false">
+                        <columns>
+                           <TableColumn id="tc_col1" fx:id="tc_col6" prefWidth="75.0" text="Name" />
+                        </columns>
+                     </TableView>
             </children>
           </AnchorPane>
         </content>
