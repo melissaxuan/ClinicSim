@@ -117,6 +117,7 @@ public class Date implements Comparable<Date>
      */
     public boolean isValid()
     {
+//        System.out.println(this.toString());
         int submonth = this.month -1;
 
         if(submonth <Calendar.JANUARY|| submonth >Calendar.DECEMBER)

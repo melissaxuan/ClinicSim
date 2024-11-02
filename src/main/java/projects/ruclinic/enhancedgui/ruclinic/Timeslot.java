@@ -8,20 +8,20 @@ import java.util.Calendar;
  * @author Michael Ehresman, Melissa Xuan
  */
 public class Timeslot implements Comparable<Timeslot> {
-    protected static final int EARLIEST_TIMESLOT = 1;
-    protected static final int LATEST_TIMESLOT = 12;
-    private final int SLOT1 =1;
-    private final int SLOT2 =2;
-    private final int SLOT3 =3;
-    private final int SLOT4 =4;
-    private final int SLOT5 =5;
-    private final int SLOT6 =6;
-    private final int SLOT7 =7;
-    private final int SLOT8 =8;
-    private final int SLOT9 =9;
-    private final int SLOT10 =10;
-    private final int SLOT11 =11;
-    private final int SLOT12=12;
+    public static final int EARLIEST_TIMESLOT = 1;
+    public static final int LATEST_TIMESLOT = 12;
+    private final int SLOT1 = 1;
+    private final int SLOT2 = 2;
+    private final int SLOT3 = 3;
+    private final int SLOT4 = 4;
+    private final int SLOT5 = 5;
+    private final int SLOT6 = 6;
+    private final int SLOT7 = 7;
+    private final int SLOT8 = 8;
+    private final int SLOT9 = 9;
+    private final int SLOT10 = 10;
+    private final int SLOT11 = 11;
+    private final int SLOT12= 12;
     private final int HALFHOUR = 30;
     private final int HOURS = 00;
 
@@ -191,6 +191,4 @@ public class Timeslot implements Comparable<Timeslot> {
      * @return minute of the current object
      */
     public int getMinute(){return this.minute;}
-
-
 }
