@@ -7,6 +7,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Handles launching application.
+ */
 public class ClinicManagerMain extends Application {
     @Override
     public void start(Stage stage) throws IOException {

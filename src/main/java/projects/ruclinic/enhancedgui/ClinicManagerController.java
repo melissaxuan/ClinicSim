@@ -6,7 +6,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.InputMethodEvent;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import projects.ruclinic.enhancedgui.ruclinic.*;
@@ -17,12 +16,12 @@ import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.Scanner;
 
-import projects.ruclinic.enhancedgui.ruclinic.Provider;
-import projects.ruclinic.enhancedgui.ruclinic.Technician;
-import projects.ruclinic.enhancedgui.ruclinic.Doctor;
 import projects.ruclinic.enhancedgui.util.List;
 import projects.ruclinic.enhancedgui.util.Sort;
 
+/**
+ * Controller to manage clinic.
+ */
 public class ClinicManagerController {
 
     @FXML
@@ -211,6 +210,10 @@ public class ClinicManagerController {
         tv_printRadiology.setItems(FXCollections.observableArrayList(Radiology.values()));
     }
 
+    /**
+     * Handles cancelling appointment.
+     * @param event action event
+     */
     @FXML
     void cancelApp(ActionEvent event) {
         String missing = checkMissingData(false);
@@ -288,14 +291,10 @@ public class ClinicManagerController {
         }
     }
 
-
     /**
-     * Helper method to print the locations to the table view
+     * Handles clearing update appointments tab.
+     * @param event action event
      */
-    private void printTableLocations() {
-
-    }
-
     @FXML
     void clearAppTab(ActionEvent event) {
         tf_fname.clear();
@@ -311,36 +310,10 @@ public class ClinicManagerController {
         }
     }
 
-    @FXML
-    void getAppDate(ActionEvent event) {
-
-    }
-
-    @FXML
-    void getAppProvider(ActionEvent event) {
-
-    }
-
-    @FXML
-    void getAppTime(ActionEvent event) {
-
-    }
-
-    @FXML
-    void getPatientDOB(ActionEvent event) {
-
-    }
-
-    @FXML
-    void getPatientFirstName(ActionEvent event) {
-
-    }
-
-    @FXML
-    void getPatientLastName(ActionEvent event) {
-
-    }
-
+    /**
+     * Handles loading providers and imaging types to update appointment tab.
+     * @param event action event
+     */
     @FXML
     void loadProviders(ActionEvent event) {
         try {
@@ -382,11 +355,14 @@ public class ClinicManagerController {
         }
     }
 
+    /**
+     * Handles rescheduling appointment.
+     * @param event action event
+     */
     @FXML
     void rescheduleApp(ActionEvent event) {
         String missing = checkMissingData(false);
         if (!missing.isEmpty()) {
-            System.out.println("1");
             setupAlert("Missing Information", missing);
         }
         else {
@@ -417,12 +393,14 @@ public class ClinicManagerController {
         }
     }
 
+    /**
+     * Handles new appointment time for rescheduling appointment.
+     * @param event action event
+     */
     @FXML
     void rescheduleAppNewTime(ActionEvent event) {
         String missing = checkMissingData(false);
         if (!missing.isEmpty()) {
-            System.out.println("2");
-
             setupAlert("Missing Information", missing);
         }
         else {
@@ -440,6 +418,10 @@ public class ClinicManagerController {
         disableNewTime();
     }
 
+    /**
+     * Handles scheduling appointment.
+     * @param event action event
+     */
     @FXML
     void scheduleApp(ActionEvent event) {
         String missing = checkMissingData(true);
@@ -464,6 +446,10 @@ public class ClinicManagerController {
         }
     }
 
+    /**
+     * Enables office combo box and disables imaging combo box.
+     * @param event action event
+     */
     @FXML
     public void setOffice(ActionEvent event) {
         txt_appprovider.setOpacity(1.0);
@@ -472,6 +458,10 @@ public class ClinicManagerController {
         cb_imaging.setDisable(true);
     }
 
+    /**
+     * Enables imaging combo box and disables office combo box.
+     * @param event action event
+     */
     @FXML
     public void setImaging(ActionEvent event) {
         txt_appprovider.setOpacity(0.25);
@@ -492,6 +482,7 @@ public class ClinicManagerController {
         TA_printInfo.appendText("** List of appointments, ordered by date/time/provider.\n");
         printAppointmentList(this.appointmentList);
     }
+
      /**
      * Helper method to print out all the Appointments in List of Appointments.
      */
@@ -501,6 +492,7 @@ public class ClinicManagerController {
         }
         TA_printInfo.appendText("** End of List **");
     }
+
      /**
      * Helper method that handles print by patient command: prints appointments sorted by patient (lname, fname, dob) then appointment date and time.
      */
@@ -513,6 +505,7 @@ public class ClinicManagerController {
         TA_printInfo.appendText("** List of appointments, ordered by patient profile/date/time.\n");
         printAppointmentList(this.appointmentList);
     }
+
      /**
      * Helper method that handles print by location command: prints appointments sorted by county name, then appointment date and time.
      */
@@ -635,7 +628,8 @@ public class ClinicManagerController {
         }
         TA_printInfo.appendText("** end of list **\n");
     }
-        /**
+
+    /**
      * Helper method to add Provider to list of providers according to whether the Provider is a Doctor or Technician.
      *
      * @param input String of inputted details for Provider
@@ -651,7 +645,6 @@ public class ClinicManagerController {
             addTechnician(technician);
         }
     }
-
 
     /**
      * Helper method to add a new technician to list of Technicians in reverse order.
@@ -1173,8 +1166,6 @@ public class ClinicManagerController {
     private String convertDate(LocalDate date) {
         String d = date.toString();
         String[] dateFormat = d.split("-");
-//        System.out.println(date.toString());
-//        System.out.println(dateFormat[1] + "/" + dateFormat[2] + "/" + dateFormat[0]);
         return dateFormat[1] + "/" + dateFormat[2] + "/" + dateFormat[0];
     }
 
