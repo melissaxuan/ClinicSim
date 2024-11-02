@@ -10,8 +10,7 @@ import javafx.scene.input.InputMethodEvent;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import projects.ruclinic.enhancedgui.ruclinic.*;
-import projects.ruclinic.enhancedgui.util.List;
-import projects.ruclinic.enhancedgui.util.Sort;
+import projects.ruclinic.enhancedgui.util.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
