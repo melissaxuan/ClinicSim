@@ -6,8 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e2c0a333-de73-4cef-92f9-3856b3a4cdbe" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ClinicManagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/ClinicManagerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/util/Date.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/projects/ruclinic/enhancedgui/util/Date.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/projects/ruclinic/enhancedgui/clinic-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/projects/ruclinic/enhancedgui/clinic-view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

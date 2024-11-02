@@ -157,7 +157,16 @@ public class ClinicManagerController {
 
     @FXML
     void cancelApp(ActionEvent event) {
-
+        String missing = checkMissingData(false);
+        if (!missing.isEmpty()) {
+            setupAlert("Missing Information", missing);
+        }
+        else {
+            String[] tokens = {"C", convertDate(dp_appdate.getValue()),
+                    Integer.toString(cb_timeslot.getSelectionModel().getSelectedIndex() + 1),
+                    tf_fname.getText(), tf_lname.getText(), convertDate(dp_dob.getValue())};
+            cancel(tokens);
+        }
     }
 
     /**
@@ -285,8 +294,9 @@ public class ClinicManagerController {
 
     @FXML
     void rescheduleApp(ActionEvent event) {
-        String missing = checkMissingData(true);
+        String missing = checkMissingData(false);
         if (!missing.isEmpty()) {
+            System.out.println("1");
             setupAlert("Missing Information", missing);
         }
         else {
@@ -319,8 +329,10 @@ public class ClinicManagerController {
 
     @FXML
     void rescheduleAppNewTime(ActionEvent event) {
-        String missing = checkMissingData(true);
+        String missing = checkMissingData(false);
         if (!missing.isEmpty()) {
+            System.out.println("2");
+
             setupAlert("Missing Information", missing);
         }
         else {
@@ -340,7 +352,7 @@ public class ClinicManagerController {
 
     @FXML
     void scheduleApp(ActionEvent event) {
-        String missing = checkMissingData(false);
+        String missing = checkMissingData(true);
         if (!missing.isEmpty()) {
             setupAlert("Missing Information", missing);
         }
@@ -671,6 +683,35 @@ public class ClinicManagerController {
     }
 
     /**
+     * Helper method that handles cancel command: removes appointment from List and Patient.
+     *
+     * @param tokens array of details to be used to cancel an appointment
+     */
+    private void cancel(String[] tokens) {
+        if (isAppDatesTimeValid(tokens)) {
+            ta_output.clear();
+            Date appDate = new Date(tokens[1]);
+            Timeslot timeslot = new Timeslot(Integer.parseInt(tokens[2]));
+            Profile profile = new Profile(tokens[3], tokens[4], new Date(tokens[5]));
+            Patient patient = new Patient(profile);
+            Provider provider = new Doctor();
+            Appointment newApp = new Imaging(appDate, timeslot, patient, provider, "XRAY");
+
+            if (!this.appointmentList.contains(newApp)) {
+                ta_output.setText(newApp.getDate().toString() + " " + newApp.getTimeslot().toString() +
+                        " " + newApp.getPatient().getProfile().toString() + " - appointment does not exist.");
+            } else {
+                this.appointmentList.remove(newApp);
+                Patient p = findPatient(patient);
+                p.removeVisit(newApp);
+
+                ta_output.setText(newApp.getDate().toString() + " " + newApp.getTimeslot().toString() +
+                        " " + p.getProfile().toString() + " - has been canceled.");
+            }
+        }
+    }
+
+    /**
      * Checks if imaging service is a provided imaging service.
      *
      * @param imaging name of requested imaging service
@@ -969,7 +1010,7 @@ public class ClinicManagerController {
      * Checks if any data in the update appointments tab is empty.
      * @return String with alert message to input any missing data
      */
-    private String checkMissingData(boolean reschedule) {
+    private String checkMissingData(boolean schedule) {
         String missing = "";
         int missingCount = 0;
         if (tf_fname.getText().isEmpty()) {
@@ -992,11 +1033,11 @@ public class ClinicManagerController {
             missing = missing + ", time slot of the appointment";
             missingCount++;
         }
-        if (!reschedule && tg_apptype.getSelectedToggle().equals(rb_office) && cb_doctor.getValue() == null) {
+        if (schedule && tg_apptype.getSelectedToggle().equals(rb_office) && cb_doctor.getValue() == null) {
             missing = missing + ", provider of the appointment";
             missingCount++;
         }
-        if (!reschedule && tg_apptype.getSelectedToggle().equals(rb_imaging) && cb_imaging.getValue() == null) {
+        if (schedule && tg_apptype.getSelectedToggle().equals(rb_imaging) && cb_imaging.getValue() == null) {
             missing = missing + ", imaging type of the appointment";
             missingCount++;
         }
